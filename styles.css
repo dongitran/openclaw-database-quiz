@@ -372,17 +372,20 @@ footer {
     
     .actions {
         flex-wrap: wrap;
+        gap: 8px;
     }
     
     .btn {
         padding: 12px 16px;
-        font-size: 0.95rem;
+        font-size: 0.9rem;
+        flex: 1;
+        min-width: 80px;
+        justify-content: center;
     }
     
     .btn-primary {
-        order: -1;
-        width: 100%;
-        margin-bottom: 8px;
+        order: 0;
+        flex: 2;
     }
 }
 
