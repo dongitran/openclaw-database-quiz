@@ -1472,8 +1472,7 @@ function renderQuestion() {
     if (categoryBadgeEl) {
         categoryBadgeEl.textContent = `${emoji} ${q.category}`;
         categoryBadgeEl.className = 'category-badge';
-        const categoryClass = 'category-' + q.category.replace(/\s+/g, '\\ ').replace(/&/g, '\\&');
-        categoryBadgeEl.classList.add(categoryClass);
+        categoryBadgeEl.setAttribute('data-category', q.category);
     }
     
     if (questionTextEl) {
