@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Quiz - 50 Câu Hỏi</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🗄️ Database Quiz</h1>
+            <p class="subtitle">50 câu hỏi về cơ sở dữ liệu</p>
+        </header>
+
+        <main>
+            <div class="quiz-card">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                
+                <div class="question-header">
+                    <span class="question-counter" id="questionCounter">Câu 1/50</span>
+                    <span class="category-badge" id="categoryBadge">SQL</span>
+                </div>
+
+                <div class="question-content">
+                    <h2 class="question-text" id="questionText">Đang tải câu hỏi...</h2>
+                    
+                    <div class="options" id="optionsContainer">
+                        <!-- Options will be inserted here -->
+                    </div>
+                </div>
+
+                <div class="answer-section" id="answerSection" style="display: none;">
+                    <div class="answer-header">
+                        <span class="correct-answer" id="correctAnswer"></span>
+                    </div>
+                    <div class="explanation" id="explanation"></div>
+                </div>
+
+                <div class="actions">
+                    <button class="btn btn-secondary" id="prevBtn" onclick="prevQuestion()">← Câu trước</button>
+                    <button class="btn btn-primary" id="showAnswerBtn" onclick="showAnswer()">Xem đáp án</button>
+                    <button class="btn btn-secondary" id="nextBtn" onclick="nextQuestion()">Câu sau →</button>
+                </div>
+            </div>
+
+            <div class="quiz-complete" id="quizComplete" style="display: none;">
+                <div class="complete-icon">🎉</div>
+                <h2>Hoàn thành!</h2>
+                <p>Bạn đã hoàn thành 50 câu hỏi về Database</p>
+                <button class="btn btn-primary" onclick="restartQuiz()">Làm lại từ đầu</button>
+            </div>
+        </main>
+
+        <footer>
+            <p>Made with ❤️ for Database learners</p>
+        </footer>
+    </div>
+
+    <script src="quiz.js"></script>
+</body>
+</html>
