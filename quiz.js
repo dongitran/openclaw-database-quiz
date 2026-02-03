@@ -3,7 +3,7 @@ const quizData = [
     {
         id: 1,
         category: "SQL",
-        question: "Kết quả của SELECT NULL = NULL là gì?",
+        question: "What is the result of SELECT NULL = NULL?",
         options: [
             "TRUE",
             "FALSE",
@@ -11,25 +11,25 @@ const quizData = [
             "ERROR"
         ],
         correct: 2,
-        explanation: "NULL đại diện cho giá trị không xác định. NULL = NULL trả về NULL (không xác định), không phải TRUE. Để so sánh NULL, phải dùng IS NULL hoặc IS NOT NULL."
+        explanation: "NULL represents an unknown value. NULL = NULL returns NULL (unknown), not TRUE. To compare NULL, use IS NULL or IS NOT NULL."
     },
     {
         id: 2,
         category: "SQL",
-        question: "Sự khác biệt giữa INNER JOIN và LEFT JOIN là gì?",
+        question: "What is the difference between INNER JOIN and LEFT JOIN?",
         options: [
-            "Không có sự khác biệt",
-            "INNER JOIN trả về các bản ghi khớp ở cả 2 bảng, LEFT JOIN trả về tất cả từ bảng trái + khớp ở bảng phải",
-            "LEFT JOIN nhanh hơn INNER JOIN",
-            "INNER JOIN chỉ hoạt động với 2 bảng"
+            "No difference",
+            "INNER JOIN returns matching records from both tables, LEFT JOIN returns all from left table + matches from right table",
+            "LEFT JOIN is faster than INNER JOIN",
+            "INNER JOIN only works with 2 tables"
         ],
         correct: 1,
-        explanation: "<strong>INNER JOIN</strong> chỉ trả về các bản ghi có khớp ở <em>cả hai bảng</em>. <strong>LEFT JOIN</strong> trả về <em>tất cả bản ghi từ bảng trái</em>, kèm theo bản ghi khớp từ bảng phải (nếu không khớp thì giá trị là NULL)."
+        explanation: "<strong>INNER JOIN</strong> only returns records that have matches in <em>both tables</em>. <strong>LEFT JOIN</strong> returns <em>all records from the left table</em>, along with matching records from the right table (if no match, values are NULL)."
     },
     {
         id: 3,
         category: "Transaction",
-        question: "ACID trong transaction database là gì?",
+        question: "What is ACID in database transactions?",
         options: [
             "Advanced, Concurrent, Indexed, Distributed",
             "Atomicity, Consistency, Isolation, Durability",
@@ -37,38 +37,38 @@ const quizData = [
             "Application, Cache, Index, Database"
         ],
         correct: 1,
-        explanation: "<strong>ACID</strong> là viết tắt của:<br>• <strong>A</strong>tomicity: Tất cả hoặc không gì cả<br>• <strong>C</strong>onsistency: Dữ liệu luôn hợp lệ<br>• <strong>I</strong>solation: Các transaction độc lập<br>• <strong>D</strong>urability: Dữ liệu được lưu vĩnh viễn"
+        explanation: "<strong>ACID</strong> stands for:<br>• <strong>A</strong>tomicity: All or nothing<br>• <strong>C</strong>onsistency: Data is always valid<br>• <strong>I</strong>solation: Transactions are independent<br>• <strong>D</strong>urability: Data is permanently saved"
     },
     {
         id: 4,
         category: "Normalization",
-        question: "Normal Form 3NF (Third Normal Form) yêu cầu gì?",
+        question: "What does Third Normal Form (3NF) require?",
         options: [
-            "Chỉ cần có primary key",
-            "Thỏa mãn 2NF và không có transitive dependency",
-            "Tất cả cột phải là VARCHAR",
-            "Không được có quan hệ giữa các bảng"
+            "Just need a primary key",
+            "Satisfies 2NF and has no transitive dependency",
+            "All columns must be VARCHAR",
+            "No relationships between tables allowed"
         ],
         correct: 1,
-        explanation: "<strong>3NF</strong> yêu cầu:<br>1. Thỏa mãn 2NF<br>2. Không có <strong>transitive dependency</strong> (phụ thuộc bắc cầu) - nghĩa là các cột non-key không được phụ thuộc vào nhau, chỉ phụ thuộc trực tiếp vào primary key."
+        explanation: "<strong>3NF</strong> requires:<br>1. Satisfies 2NF<br>2. No <strong>transitive dependency</strong> - meaning non-key columns must not depend on each other, only directly on the primary key."
     },
     {
         id: 5,
         category: "Indexing",
-        question: "Index trong database dùng để làm gì?",
+        question: "What is an index used for in a database?",
         options: [
-            "Lưu trữ dữ liệu tạm thờ",
-            "Tăng tốc độ truy vấn SELECT",
-            "Giảm dung lượng database",
-            "Mã hóa dữ liệu"
+            "Temporary data storage",
+            "Speed up SELECT queries",
+            "Reduce database size",
+            "Encrypt data"
         ],
         correct: 1,
-        explanation: "<strong>Index</strong> giúp tăng tốc độ <em>đọc dữ liệu (SELECT)</em> bằng cách tạo cấu trúc dữ liệu (thường là B-tree) cho phép tìm kiếm nhanh hơn. Tuy nhiên, index làm <em>chậm</em> các thao tác INSERT, UPDATE, DELETE."
+        explanation: "<strong>Index</strong> helps speed up <em>reading data (SELECT)</em> by creating a data structure (usually B-tree) that allows faster searching. However, indexes <em>slow down</em> INSERT, UPDATE, and DELETE operations."
     },
     {
         id: 6,
         category: "SQL",
-        question: "SQL nào tìm các bản ghi trùng lặp trong bảng?",
+        question: "Which SQL finds duplicate records in a table?",
         options: [
             "SELECT * FROM table WHERE duplicate = true",
             "SELECT column, COUNT(*) FROM table GROUP BY column HAVING COUNT(*) > 1",
@@ -76,12 +76,12 @@ const quizData = [
             "FIND DUPLICATES IN table"
         ],
         correct: 1,
-        explanation: "Câu lệnh <code>SELECT column, COUNT(*) FROM table GROUP BY column HAVING COUNT(*) > 1</code> sẽ nhóm các giá trị giống nhau và chỉ trả về những group có nhiều hơn 1 bản ghi (tức là trùng lặp)."
+        explanation: "The statement <code>SELECT column, COUNT(*) FROM table GROUP BY column HAVING COUNT(*) > 1</code> groups identical values and only returns groups with more than 1 record (i.e., duplicates)."
     },
     {
         id: 7,
         category: "NoSQL",
-        question: "MongoDB thuộc loại NoSQL nào?",
+        question: "What type of NoSQL is MongoDB?",
         options: [
             "Key-Value store",
             "Document store",
@@ -89,25 +89,25 @@ const quizData = [
             "Graph database"
         ],
         correct: 1,
-        explanation: "<strong>MongoDB</strong> là <strong>Document Store</strong> - lưu trữ dữ liệu dưới dạng document JSON/BSON. Mỗi document có thể có cấu trúc khác nhau, rất linh hoạt so với SQL."
+        explanation: "<strong>MongoDB</strong> is a <strong>Document Store</strong> - stores data as JSON/BSON documents. Each document can have a different structure, very flexible compared to SQL."
     },
     {
         id: 8,
         category: "SQL",
-        question: "Sự khác biệt giữa WHERE và HAVING?",
+        question: "What is the difference between WHERE and HAVING?",
         options: [
-            "Không có sự khác biệt",
-            "WHERE lọc trước GROUP BY, HAVING lọc sau GROUP BY",
-            "HAVING nhanh hơn WHERE",
-            "WHERE chỉ dùng cho số, HAVING cho chuỗi"
+            "No difference",
+            "WHERE filters before GROUP BY, HAVING filters after GROUP BY",
+            "HAVING is faster than WHERE",
+            "WHERE is only for numbers, HAVING is for strings"
         ],
         correct: 1,
-        explanation: "<strong>WHERE</strong> lọc <em>bản ghi</em> trước khi nhóm (GROUP BY). <strong>HAVING</strong> lọc <em>kết quả</em> sau khi đã nhóm, thường dùng với các hàm aggregate (COUNT, SUM, AVG...)."
+        explanation: "<strong>WHERE</strong> filters <em>records</em> before grouping (GROUP BY). <strong>HAVING</strong> filters <em>results</em> after grouping, usually used with aggregate functions (COUNT, SUM, AVG...)."
     },
     {
         id: 9,
         category: "Transaction",
-        question: "Isolation level nào cao nhất (an toàn nhất)?",
+        question: "Which isolation level is the highest (safest)?",
         options: [
             "READ UNCOMMITTED",
             "READ COMMITTED",
@@ -115,38 +115,38 @@ const quizData = [
             "SERIALIZABLE"
         ],
         correct: 3,
-        explanation: "<strong>SERIALIZABLE</strong> là isolation level cao nhất, đảm bảo các transaction thực thi như thể tuần tự (không có hiện tượng phantom reads, non-repeatable reads, dirty reads). Tuy nhiên, hiệu suất thấp nhất."
+        explanation: "<strong>SERIALIZABLE</strong> is the highest isolation level, ensuring transactions execute as if they were sequential (no phantom reads, non-repeatable reads, or dirty reads). However, it has the lowest performance."
     },
     {
         id: 10,
         category: "SQL",
-        question: "Primary Key và Unique Key khác nhau thế nào?",
+        question: "How do Primary Key and Unique Key differ?",
         options: [
-            "Không có khác biệt",
-            "Primary Key không cho phép NULL, Unique Key cho phép 1 NULL",
-            "Unique Key bắt buộc phải có, Primary Key không",
-            "Primary Key chỉ dùng cho số nguyên"
+            "No difference",
+            "Primary Key does not allow NULL, Unique Key allows 1 NULL",
+            "Unique Key is mandatory, Primary Key is not",
+            "Primary Key is only for integers"
         ],
         correct: 1,
-        explanation: "<strong>Primary Key</strong>: Không cho phép NULL, mỗi bảng chỉ có 1, được dùng làm khóa chính.<br><strong>Unique Key</strong>: Cho phép <em>1 giá trị NULL</em>, một bảng có thể có nhiều unique key."
+        explanation: "<strong>Primary Key</strong>: Does not allow NULL, only one per table, used as the main key.<br><strong>Unique Key</strong>: Allows <em>1 NULL value</em>, a table can have multiple unique keys."
     },
     {
         id: 11,
         category: "SQL",
-        question: "DELETE và TRUNCATE khác nhau như thế nào?",
+        question: "How do DELETE and TRUNCATE differ?",
         options: [
-            "Không có khác biệt",
-            "DELETE xóa từng dòng và ghi log, TRUNCATE xóa toàn bộ trang và không ghi log",
-            "TRUNCATE có thể dùng WHERE, DELETE không",
-            "DELETE nhanh hơn TRUNCATE"
+            "No difference",
+            "DELETE deletes rows one by one and logs, TRUNCATE deletes entire pages and doesn't log",
+            "TRUNCATE can use WHERE, DELETE cannot",
+            "DELETE is faster than TRUNCATE"
         ],
         correct: 1,
-        explanation: "<strong>DELETE</strong>: Xóa từng dòng, có thể dùng WHERE, ghi log đầy đủ, có thể rollback.<br><strong>TRUNCATE</strong>: Xóa toàn bộ dữ liệu (không dùng WHERE), ít log hơn, nhanh hơn, reset auto-increment."
+        explanation: "<strong>DELETE</strong>: Deletes row by row, can use WHERE, logs fully, can be rolled back.<br><strong>TRUNCATE</strong>: Deletes all data (no WHERE), less logging, faster, resets auto-increment."
     },
     {
         id: 12,
         category: "NoSQL",
-        question: "Redis thuộc loại database nào?",
+        question: "What type of database is Redis?",
         options: [
             "Document database",
             "Key-Value store",
@@ -154,12 +154,12 @@ const quizData = [
             "Graph database"
         ],
         correct: 1,
-        explanation: "<strong>Redis</strong> là <strong>Key-Value Store</strong> - lưu trữ dữ liệu dưới dạng key-value trong memory. Rất nhanh, thường dùng làm cache, session store, rate limiting."
+        explanation: "<strong>Redis</strong> is a <strong>Key-Value Store</strong> - stores data as key-value pairs in memory. Very fast, commonly used as cache, session store, and rate limiting."
     },
     {
         id: 13,
         category: "SQL",
-        question: "Câu lệnh nào lấy 5 bản ghi đầu tiên trong MySQL?",
+        question: "Which statement gets the first 5 records in MySQL?",
         options: [
             "SELECT TOP 5 * FROM table",
             "SELECT FIRST 5 * FROM table",
@@ -167,51 +167,51 @@ const quizData = [
             "SELECT * FROM table FETCH 5"
         ],
         correct: 2,
-        explanation: "Trong <strong>MySQL</strong>, dùng <code>LIMIT 5</code>. Trong SQL Server dùng <code>TOP 5</code>, trong Oracle dùng <code>FETCH FIRST 5 ROWS ONLY</code>."
+        explanation: "In <strong>MySQL</strong>, use <code>LIMIT 5</code>. In SQL Server use <code>TOP 5</code>, in Oracle use <code>FETCH FIRST 5 ROWS ONLY</code>."
     },
     {
         id: 14,
         category: "Indexing",
-        question: "Composite Index (Multi-column index) hoạt động tốt nhất khi nào?",
+        question: "When does a Composite Index (Multi-column index) work best?",
         options: [
-            "Khi query chỉ dùng cột cuối của index",
-            "Khi query dùng các cột từ trái sang phải theo thứ tự index",
-            "Khi query dùng OR thay vì AND",
-            "Khi bảng có ít hơn 100 dòng"
+            "When query only uses the last column of the index",
+            "When query uses columns from left to right in index order",
+            "When query uses OR instead of AND",
+            "When table has fewer than 100 rows"
         ],
         correct: 1,
-        explanation: "<strong>Composite Index</strong> (A, B, C) hoạt động tốt nhất khi query sử dụng các cột từ <em>trái sang phải</em>: A, hoặc A+B, hoặc A+B+C. Không dùng được nếu chỉ query B hoặc C."
+        explanation: "<strong>Composite Index</strong> (A, B, C) works best when queries use columns from <em>left to right</em>: A, or A+B, or A+B+C. Cannot be used if only querying B or C."
     },
     {
         id: 15,
         category: "Normalization",
-        question: "Denormalization là gì và khi nào nên dùng?",
+        question: "What is Denormalization and when should it be used?",
         options: [
-            "Xóa database - không nên dùng bao giờ",
-            "Cố ý thêm dữ liệu dư thừa để tăng tốc độ đọc",
-            "Tạo thêm index cho tất cả các cột",
-            "Chuyển từ SQL sang NoSQL"
+            "Delete database - never use",
+            "Intentionally add redundant data to speed up reads",
+            "Create index for all columns",
+            "Convert from SQL to NoSQL"
         ],
         correct: 1,
-        explanation: "<strong>Denormalization</strong> là cố ý thêm dữ liệu dư thừa (vi phạm normal form) để <em>giảm số lượng JOIN</em>, tăng tốc độ đọc. Thường dùng cho hệ thống read-heavy như data warehouse."
+        explanation: "<strong>Denormalization</strong> is intentionally adding redundant data (violating normal forms) to <em>reduce the number of JOINs</em> and speed up reads. Often used for read-heavy systems like data warehouses."
     },
     {
         id: 16,
         category: "SQL",
-        question: "UNION và UNION ALL khác nhau thế nào?",
+        question: "How do UNION and UNION ALL differ?",
         options: [
-            "Không có khác biệt",
-            "UNION loại bỏ trùng lặp, UNION ALL giữ lại tất cả",
-            "UNION ALL chỉ dùng cho 2 bảng",
-            "UNION nhanh hơn UNION ALL"
+            "No difference",
+            "UNION removes duplicates, UNION ALL keeps all",
+            "UNION ALL only works for 2 tables",
+            "UNION is faster than UNION ALL"
         ],
         correct: 1,
-        explanation: "<strong>UNION</strong>: Kết hợp kết quả và <em>loại bỏ bản ghi trùng lặp</em> (chậm hơn).<br><strong>UNION ALL</strong>: Kết hợp và <em>giữ lại tất cả</em> bản ghi (nhanh hơn)."
+        explanation: "<strong>UNION</strong>: Combines results and <em>removes duplicate records</em> (slower).<br><strong>UNION ALL</strong>: Combines and <em>keeps all</em> records (faster)."
     },
     {
         id: 17,
         category: "SQL",
-        question: "Câu lệnh nào tìm giá trị lớn thứ 2 trong cột salary?",
+        question: "Which statement finds the 2nd highest value in the salary column?",
         options: [
             "SELECT MAX(salary) FROM employees WHERE salary < (SELECT MAX(salary) FROM employees)",
             "SELECT SECOND_MAX(salary) FROM employees",
@@ -219,142 +219,142 @@ const quizData = [
             "SELECT MAX(salary) - 1 FROM employees"
         ],
         correct: 0,
-        explanation: "Cách phổ biến: <code>SELECT MAX(salary) FROM employees WHERE salary < (SELECT MAX(salary) FROM employees)</code>. Có thể dùng window functions như ROW_NUMBER() trong SQL hiện đại."
+        explanation: "Common approach: <code>SELECT MAX(salary) FROM employees WHERE salary < (SELECT MAX(salary) FROM employees)</code>. Can also use window functions like ROW_NUMBER() in modern SQL."
     },
     {
         id: 18,
         category: "Database Design",
-        question: "Foreign Key dùng để làm gì?",
+        question: "What is a Foreign Key used for?",
         options: [
-            "Tạo index tự động",
-            "Đảm bảo tính toàn vẹn tham chiếu giữa các bảng",
-            "Tăng tốc độ truy vấn",
-            "Mã hóa dữ liệu"
+            "Creates automatic index",
+            "Ensures referential integrity between tables",
+            "Speeds up queries",
+            "Encrypts data"
         ],
         correct: 1,
-        explanation: "<strong>Foreign Key</strong> đảm bảo <strong>referential integrity</strong> - không cho phép tạo bản ghi tham chiếu đến dữ liệu không tồn tại, và có thể cấu hình hành động khi dữ liệu gốc bị xóa (CASCADE, SET NULL...)."
+        explanation: "<strong>Foreign Key</strong> ensures <strong>referential integrity</strong> - prevents creating records that reference non-existent data, and can configure actions when original data is deleted (CASCADE, SET NULL...)."
     },
     {
         id: 19,
         category: "NoSQL",
-        question: "Điểm mạnh của NoSQL so với SQL là gì?",
+        question: "What are the strengths of NoSQL compared to SQL?",
         options: [
-            "Luôn nhanh hơn SQL trong mọi trường hợp",
-            "Dễ scale horizontally, linh hoạt schema, tốt cho unstructured data",
-            "Hỗ trợ transaction ACID tốt hơn",
-            "Ngôn ngữ query chuẩn hóa"
+            "Always faster than SQL in all cases",
+            "Easy to scale horizontally, flexible schema, good for unstructured data",
+            "Better ACID transaction support",
+            "Standardized query language"
         ],
         correct: 1,
-        explanation: "<strong>NoSQL</strong> mạnh ở:<br>• <strong>Horizontal scaling</strong> (phân tán dễ dàng)<br>• <strong>Schema flexible</strong> (không cần định nghĩa trước)<br>• Tốt cho <strong>unstructured/semi-structured data</strong>"
+        explanation: "<strong>NoSQL</strong> strengths:<br>• <strong>Horizontal scaling</strong> (easy distribution)<br>• <strong>Flexible schema</strong> (no predefined structure needed)<br>• Good for <strong>unstructured/semi-structured data</strong>"
     },
     {
         id: 20,
         category: "SQL",
-        question: "Subquery và JOIN, cái nào thường hiệu quả hơn?",
+        question: "Which is usually more efficient, Subquery or JOIN?",
         options: [
-            "Subquery luôn nhanh hơn",
-            "JOIN thường hiệu quả hơn vì database engine tối ưu tốt hơn",
-            "Không có sự khác biệt",
-            "Không thể so sánh"
+            "Subquery is always faster",
+            "JOIN is usually more efficient because the database engine optimizes better",
+            "No difference",
+            "Cannot be compared"
         ],
         correct: 1,
-        explanation: "<strong>JOIN</strong> thường hiệu quả hơn vì database engine có thể tối ưu execution plan tốt hơn. Tuy nhiên, tùy trường hợp, subquery có thể đọc dễ hơn và với optimizer hiện đại, sự khác biệt không lớn."
+        explanation: "<strong>JOIN</strong> is usually more efficient because the database engine can optimize the execution plan better. However, depending on the case, subqueries may be more readable and with modern optimizers, the difference is not significant."
     },
     {
         id: 21,
         category: "Transaction",
-        question: "Deadlock trong database là gì?",
+        question: "What is a Deadlock in a database?",
         options: [
-            "Database bị crash",
-            "Hai transaction chờ đợi lẫn nhau để giải phóng lock",
-            "Query chạy quá lâu",
-            "Index bị hỏng"
+            "Database crashes",
+            "Two transactions waiting for each other to release locks",
+            "Query takes too long",
+            "Index is corrupted"
         ],
         correct: 1,
-        explanation: "<strong>Deadlock</strong> xảy ra khi Transaction A lock resource X và chờ resource Y, trong khi Transaction B lock resource Y và chờ resource X. Cả hai đều chờ nhau mãi mãi. Database thường tự động phát hiện và kill một transaction."
+        explanation: "<strong>Deadlock</strong> occurs when Transaction A locks resource X and waits for resource Y, while Transaction B locks resource Y and waits for resource X. Both wait for each other forever. The database usually automatically detects and kills one transaction."
     },
     {
         id: 22,
         category: "SQL",
-        question: "COALESCE() function dùng để làm gì?",
+        question: "What is the COALESCE() function used for?",
         options: [
-            "Kết hợp nhiều bảng",
-            "Trả về giá trị đầu tiên không NULL trong danh sách",
-            "Tính tổng các cột",
-            "Nén dữ liệu"
+            "Combine multiple tables",
+            "Returns the first non-NULL value in the list",
+            "Sum of columns",
+            "Compress data"
         ],
         correct: 1,
-        explanation: "<strong>COALESCE(value1, value2, ...)</strong> trả về <em>giá trị đầu tiên không NULL</em>. Thường dùng để thay thế NULL bằng giá trị mặc định: <code>COALESCE(phone, 'N/A')</code>"
+        explanation: "<strong>COALESCE(value1, value2, ...)</strong> returns the <em>first non-NULL value</em>. Often used to replace NULL with a default value: <code>COALESCE(phone, 'N/A')</code>"
     },
     {
         id: 23,
         category: "Indexing",
-        question: "Covering Index là gì?",
+        question: "What is a Covering Index?",
         options: [
-            "Index bao phủ toàn bộ database",
-            "Index chứa tất cả cột cần cho query (không cần lookup bảng gốc)",
-            "Index cho tất cả các bảng",
-            "Backup của index"
+            "Index covering the entire database",
+            "Index containing all columns needed for the query (no lookup to original table)",
+            "Index for all tables",
+            "Backup of index"
         ],
         correct: 1,
-        explanation: "<strong>Covering Index</strong> là index chứa <em>tất cả các cột</em> cần thiết cho một query (trong cả WHERE và SELECT). Query chỉ cần đọc index, không cần truy cập bảng gốc → rất nhanh."
+        explanation: "<strong>Covering Index</strong> is an index containing <em>all columns</em> needed for a query (in both WHERE and SELECT). The query only needs to read the index, no need to access the original table → very fast."
     },
     {
         id: 24,
         category: "SQL",
-        question: "Window function ROW_NUMBER() dùng để làm gì?",
+        question: "What is the ROW_NUMBER() window function used for?",
         options: [
-            "Đếm tổng số dòng trong bảng",
-            "Gán số thứ tự duy nhất cho mỗi dòng trong partition",
-            "Tính trung bình",
-            "Tạo primary key"
+            "Count total rows in table",
+            "Assign unique sequential numbers to rows in a partition",
+            "Calculate average",
+            "Create primary key"
         ],
         correct: 1,
-        explanation: "<strong>ROW_NUMBER()</strong> gán số thứ tự duy nhất (1, 2, 3...) cho mỗi dòng trong một <em>partition</em>. Ví dụ: <code>ROW_NUMBER() OVER (PARTITION BY dept ORDER BY salary DESC)</code>"
+        explanation: "<strong>ROW_NUMBER()</strong> assigns unique sequential numbers (1, 2, 3...) to each row in a <em>partition</em>. Example: <code>ROW_NUMBER() OVER (PARTITION BY dept ORDER BY salary DESC)</code>"
     },
     {
         id: 25,
         category: "Database Design",
-        question: "Surrogate Key là gì?",
+        question: "What is a Surrogate Key?",
         options: [
-            "Key chính thức của ngườ dùng",
-            "Key tự động sinh, không mang ý nghĩa nghiệp vụ (như AUTO_INCREMENT)",
-            "Key để mã hóa dữ liệu",
-            "Key ngoại (Foreign Key)"
+            "User's official key",
+            "Auto-generated key with no business meaning (like AUTO_INCREMENT)",
+            "Key for encrypting data",
+            "Foreign Key"
         ],
         correct: 1,
-        explanation: "<strong>Surrogate Key</strong> là key <em>tự động sinh</em> (ID, UUID...) không mang ý nghĩa nghiệp vụ, chỉ để định danh duy nhất. Ngược lại với <strong>Natural Key</strong> (như SSN, email) có ý nghĩa thực tế."
+        explanation: "<strong>Surrogate Key</strong> is an <em>auto-generated</em> key (ID, UUID...) with no business meaning, used only for unique identification. Opposite of <strong>Natural Key</strong> (like SSN, email) which has real-world meaning."
     },
     {
         id: 26,
         category: "SQL",
-        question: "Sự khác biệt giữa VARCHAR và CHAR?",
+        question: "What is the difference between VARCHAR and CHAR?",
         options: [
-            "Không có sự khác biệt",
-            "CHAR cố định độ dài, VARCHAR thay đổi theo dữ liệu",
-            "VARCHAR nhanh hơn CHAR",
-            "CHAR chỉ dùng cho ký tự đặc biệt"
+            "No difference",
+            "CHAR has fixed length, VARCHAR varies with data",
+            "VARCHAR is faster than CHAR",
+            "CHAR is only for special characters"
         ],
         correct: 1,
-        explanation: "<strong>CHAR(n)</strong>: Cố định n ký tự, padding space nếu ngắn hơn.<br><strong>VARCHAR(n)</strong>: Biến động, chỉ lưu đúng số ký tự cần + 1-2 bytes cho độ dài. VARCHAR tiết kiệm space hơn."
+        explanation: "<strong>CHAR(n)</strong>: Fixed n characters, padded with spaces if shorter.<br><strong>VARCHAR(n)</strong>: Variable, only stores needed characters + 1-2 bytes for length. VARCHAR saves more space."
     },
     {
         id: 27,
         category: "Transaction",
-        question: "Optimistic Locking và Pessimistic Locking khác nhau?",
+        question: "How do Optimistic Locking and Pessimistic Locking differ?",
         options: [
-            "Không có khác biệt",
-            "Optimistic: Kiểm tra conflict khi update, Pessimistic: Lock ngay khi đọc",
-            "Optimistic chỉ dùng cho NoSQL",
-            "Pessimistic nhanh hơn Optimistic"
+            "No difference",
+            "Optimistic: Check conflict when updating, Pessimistic: Lock when reading",
+            "Optimistic is only for NoSQL",
+            "Pessimistic is faster than Optimistic"
         ],
         correct: 1,
-        explanation: "<strong>Optimistic</strong>: Không lock, kiểm tra version/timestamp khi update. Tốt cho đọc nhiều.<br><strong>Pessimistic</strong>: Lock ngay khi đọc. Tốt cho ghi nhiều, tránh conflict."
+        explanation: "<strong>Optimistic</strong>: No locking, checks version/timestamp when updating. Good for read-heavy.<br><strong>Pessimistic</strong>: Locks immediately when reading. Good for write-heavy, avoids conflicts."
     },
     {
         id: 28,
         category: "SQL",
-        question: "CTE (Common Table Expression) bắt đầu bằng từ khóa nào?",
+        question: "Which keyword starts a CTE (Common Table Expression)?",
         options: [
             "WITH",
             "USING",
@@ -362,90 +362,90 @@ const quizData = [
             "TEMP"
         ],
         correct: 0,
-        explanation: "<strong>CTE</strong> bắt đầu bằng <code>WITH</code>:<br><code>WITH cte_name AS (SELECT ...) SELECT * FROM cte_name</code>. Giúp viết query phức tạp dễ đọc hơn."
+        explanation: "<strong>CTE</strong> starts with <code>WITH</code>:<br><code>WITH cte_name AS (SELECT ...) SELECT * FROM cte_name</code>. Helps write complex queries more readably."
     },
     {
         id: 29,
         category: "NoSQL",
-        question: "CAP Theorem nói về điều gì?",
+        question: "What does the CAP Theorem state?",
         options: [
-            "Cách tối ưu query",
-            "Chỉ có thể đảm bảo 2/3: Consistency, Availability, Partition tolerance",
-            "Cách thiết kế index",
-            "Các loại join trong NoSQL"
+            "How to optimize queries",
+            "Can only guarantee 2/3: Consistency, Availability, Partition tolerance",
+            "How to design indexes",
+            "Types of joins in NoSQL"
         ],
         correct: 1,
-        explanation: "<strong>CAP Theorem</strong>: Trong hệ thống phân tán, chỉ có thể đảm bảo tối đa <strong>2/3</strong> thuộc tính:<br>• <strong>C</strong>onsistency<br>• <strong>A</strong>vailability<br>• <strong>P</strong>artition tolerance (bắt buộc phải có trong distributed system)"
+        explanation: "<strong>CAP Theorem</strong>: In distributed systems, you can only guarantee at most <strong>2/3</strong> properties:<br>• <strong>C</strong>onsistency<br>• <strong>A</strong>vailability<br>• <strong>P</strong>artition tolerance (required in distributed systems)"
     },
     {
         id: 30,
         category: "SQL",
-        question: "Sự khác biệt giữa COUNT(*) và COUNT(column)?",
+        question: "What is the difference between COUNT(*) and COUNT(column)?",
         options: [
-            "Không có sự khác biệt",
-            "COUNT(*) đếm tất cả, COUNT(column) bỏ qua NULL",
-            "COUNT(column) nhanh hơn",
-            "COUNT(*) chỉ đếm unique values"
+            "No difference",
+            "COUNT(*) counts all, COUNT(column) skips NULL",
+            "COUNT(column) is faster",
+            "COUNT(*) only counts unique values"
         ],
         correct: 1,
-        explanation: "<strong>COUNT(*)</strong>: Đếm <em>tất cả</em> bản ghi (kể cả NULL).<br><strong>COUNT(column)</strong>: Chỉ đếm các giá trị <em>không NULL</em> trong cột đó."
+        explanation: "<strong>COUNT(*)</strong>: Counts <em>all</em> records (including NULL).<br><strong>COUNT(column)</strong>: Only counts <em>non-NULL</em> values in that column."
     },
     {
         id: 31,
         category: "Indexing",
-        question: "Clustered Index là gì?",
+        question: "What is a Clustered Index?",
         options: [
-            "Index cho nhiều cột",
-            "Index quyết định thứ tự vật lý của dữ liệu trong bảng",
-            "Index sao lưu",
-            "Index trên nhiều bảng"
+            "Index for multiple columns",
+            "Index that determines the physical order of data in the table",
+            "Backup index",
+            "Index across multiple tables"
         ],
         correct: 1,
-        explanation: "<strong>Clustered Index</strong> quyết định <em>thứ tự vật lý</em> lưu trữ dữ liệu trong bảng. Một bảng chỉ có 1 clustered index (thường là primary key). Non-clustered index trỏ đến clustered index."
+        explanation: "<strong>Clustered Index</strong> determines the <em>physical storage order</em> of data in the table. A table can only have 1 clustered index (usually the primary key). Non-clustered indexes point to the clustered index."
     },
     {
         id: 32,
         category: "SQL",
-        question: "Sử dụng EXISTS thay vì IN khi nào?",
+        question: "When to use EXISTS instead of IN?",
         options: [
-            "Luôn luôn dùng EXISTS",
-            "Khi subquery trả về nhiều dòng, EXISTS thường hiệu quả hơn",
-            "Khi so sánh số",
-            "Khi dùng với NULL"
+            "Always use EXISTS",
+            "When subquery returns many rows, EXISTS is usually more efficient",
+            "When comparing numbers",
+            "When using with NULL"
         ],
         correct: 1,
-        explanation: "<strong>EXISTS</strong> thường hiệu quả hơn <strong>IN</strong> khi subquery lớn vì EXISTS dừng ngay khi tìm thấy match đầu tiên, còn IN cần materialize toàn bộ subquery."
+        explanation: "<strong>EXISTS</strong> is usually more efficient than <strong>IN</strong> when the subquery is large because EXISTS stops immediately when it finds the first match, while IN needs to materialize the entire subquery."
     },
     {
         id: 33,
         category: "Database Design",
-        question: "Entity-Relationship Diagram (ERD) dùng để làm gì?",
+        question: "What is an Entity-Relationship Diagram (ERD) used for?",
         options: [
-            "Viết code SQL",
-            "Mô hình hóa cấu trúc database và mối quan hệ giữa các entity",
-            "Tối ưu performance",
-            "Tạo backup"
+            "Write SQL code",
+            "Model database structure and relationships between entities",
+            "Optimize performance",
+            "Create backup"
         ],
         correct: 1,
-        explanation: "<strong>ERD</strong> dùng để <em>thiết kế và trực quan hóa</em> cấu trúc database, thể hiện các <strong>entity</strong> (bảng), <strong>attribute</strong> (cột), và <strong>relationship</strong> (quan hệ) giữa chúng."
+        explanation: "<strong>ERD</strong> is used to <em>design and visualize</em> database structure, showing <strong>entities</strong> (tables), <strong>attributes</strong> (columns), and <strong>relationships</strong> between them."
     },
     {
         id: 34,
         category: "SQL",
-        question: "Self Join là gì?",
+        question: "What is a Self Join?",
         options: [
-            "Join với chính bảng đó",
-            "Join tự động",
-            "Join khi không có điều kiện",
-            "Join giữa 2 database"
+            "Join with the same table",
+            "Automatic join",
+            "Join without conditions",
+            "Join between 2 databases"
         ],
         correct: 0,
-        explanation: "<strong>Self Join</strong> là join một bảng với <em>chính nó</em>. Dùng alias để phân biệt: <code>SELECT a.name, b.name FROM employees a JOIN employees b ON a.manager_id = b.id</code>"
+        explanation: "<strong>Self Join</strong> is joining a table with <em>itself</em>. Use aliases to distinguish: <code>SELECT a.name, b.name FROM employees a JOIN employees b ON a.manager_id = b.id</code>"
     },
     {
         id: 35,
         category: "NoSQL",
-        question: "Neo4j là loại database nào?",
+        question: "What type of database is Neo4j?",
         options: [
             "Document database",
             "Graph database",
@@ -453,12 +453,12 @@ const quizData = [
             "Column-family store"
         ],
         correct: 1,
-        explanation: "<strong>Neo4j</strong> là <strong>Graph Database</strong> - tối ưu cho dữ liệu có nhiều <em>quan hệ phức tạp</em> (nodes và edges). Tuyệt vờ cho social networks, recommendation engines."
+        explanation: "<strong>Neo4j</strong> is a <strong>Graph Database</strong> - optimized for data with many <em>complex relationships</em> (nodes and edges). Great for social networks, recommendation engines."
     },
     {
         id: 36,
         category: "SQL",
-        question: "Câu lệnh nào tạo bản sao lưu cấu trúc bảng (không có dữ liệu)?",
+        question: "Which statement creates a table copy (structure only, no data)?",
         options: [
             "CLONE TABLE",
             "CREATE TABLE new_table LIKE old_table",
@@ -466,90 +466,90 @@ const quizData = [
             "DUPLICATE TABLE"
         ],
         correct: 1,
-        explanation: "Trong MySQL: <code>CREATE TABLE new_table LIKE old_table</code> tạo bảng mới với cùng cấu trúc (không có dữ liệu). Hoặc: <code>CREATE TABLE new_table AS SELECT * FROM old_table WHERE 1=0</code>"
+        explanation: "In MySQL: <code>CREATE TABLE new_table LIKE old_table</code> creates a new table with the same structure (no data). Or: <code>CREATE TABLE new_table AS SELECT * FROM old_table WHERE 1=0</code>"
     },
     {
         id: 37,
         category: "Transaction",
-        question: "Two-Phase Commit (2PC) dùng để làm gì?",
+        question: "What is Two-Phase Commit (2PC) used for?",
         options: [
-            "Tối ưu query",
-            "Đảm bảo atomicity cho distributed transaction",
-            "Tạo index nhanh hơn",
-            "Sao lưu database"
+            "Optimize query",
+            "Ensure atomicity for distributed transactions",
+            "Create index faster",
+            "Backup database"
         ],
         correct: 1,
-        explanation: "<strong>Two-Phase Commit</strong> là protocol đảm bảo <strong>atomicity</strong> cho transaction xuyên suốt nhiều database/node: Phase 1 (prepare) và Phase 2 (commit/rollback)."
+        explanation: "<strong>Two-Phase Commit</strong> is a protocol that ensures <strong>atomicity</strong> for transactions spanning multiple databases/nodes: Phase 1 (prepare) and Phase 2 (commit/rollback)."
     },
     {
         id: 38,
         category: "SQL",
-        question: "CASE expression dùng để làm gì?",
+        question: "What is the CASE expression used for?",
         options: [
-            "Tạo bảng mớ",
-            "Logic điều kiện trong SQL (IF-THEN-ELSE)",
-            "Tạo index",
-            "Kết nối database"
+            "Create new table",
+            "Conditional logic in SQL (IF-THEN-ELSE)",
+            "Create index",
+            "Connect database"
         ],
         correct: 1,
-        explanation: "<strong>CASE</strong> là câu lệnh điều kiện trong SQL:<br><code>CASE WHEN condition THEN result ELSE other END</code>. Tương tự IF-ELSE trong ngôn ngữ lập trình."
+        explanation: "<strong>CASE</strong> is a conditional statement in SQL:<br><code>CASE WHEN condition THEN result ELSE other END</code>. Similar to IF-ELSE in programming languages."
     },
     {
         id: 39,
         category: "Indexing",
-        question: "Index Fragmentation ảnh hưởng gì đến performance?",
+        question: "How does Index Fragmentation affect performance?",
         options: [
-            "Không ảnh hưởng",
-            "Làm chậm truy vấn vì dữ liệu index không liên tục",
-            "Tăng tốc độ ghi",
-            "Giảm dung lượng database"
+            "No effect",
+            "Slows down queries because index data is not contiguous",
+            "Speeds up writes",
+            "Reduces database size"
         ],
         correct: 1,
-        explanation: "<strong>Index Fragmentation</strong> xảy ra khi dữ liệu index bị phân mảnh (do nhiều INSERT/DELETE). Làm tăng I/O vì dữ liệu không liên tục, cần <strong>REBUILD</strong> hoặc <strong>REORGANIZE</strong> index để tối ưu."
+        explanation: "<strong>Index Fragmentation</strong> occurs when index data becomes fragmented (due to many INSERT/DELETE operations). Increases I/O because data is not contiguous, need to <strong>REBUILD</strong> or <strong>REORGANIZE</strong> index to optimize."
     },
     {
         id: 40,
         category: "SQL",
-        question: "Câu lệnh nào xóa toàn bộ dữ liệu trong bảng nhưng giữ lại cấu trúc?",
+        question: "Which statement deletes all data in a table but keeps the structure?",
         options: [
             "DROP TABLE",
-            "DELETE FROM table (không có WHERE)",
+            "DELETE FROM table (no WHERE)",
             "TRUNCATE TABLE",
-            "Cả B và C"
+            "Both B and C"
         ],
         correct: 3,
-        explanation: "Cả <strong>DELETE FROM table</strong> (không WHERE) và <strong>TRUNCATE TABLE</strong> đều xóa dữ liệu nhưng giữ cấu trúc. TRUNCATE nhanh hơn, không ghi log từng dòng, reset auto-increment."
+        explanation: "Both <strong>DELETE FROM table</strong> (no WHERE) and <strong>TRUNCATE TABLE</strong> delete data but keep the structure. TRUNCATE is faster, doesn't log row by row, resets auto-increment."
     },
     {
         id: 41,
         category: "Database Design",
-        question: "One-to-Many relationship được thể hiện như thế nào?",
+        question: "How is a One-to-Many relationship represented?",
         options: [
-            "Tạo bảng trung gian",
-            "Khóa ngoại ở bảng 'many' trỏ đến bảng 'one'",
-            "Gộp thành 1 bảng",
-            "Dùng array"
+            "Create intermediate table",
+            "Foreign key on the 'many' side pointing to the 'one' side",
+            "Merge into 1 table",
+            "Use array"
         ],
         correct: 1,
-        explanation: "<strong>One-to-Many</strong>: Đặt <strong>foreign key</strong> ở bảng 'many' (bên nhiều) trỏ đến primary key của bảng 'one' (bên một). Ví dụ: 1 Department có nhiều Employees."
+        explanation: "<strong>One-to-Many</strong>: Place <strong>foreign key</strong> on the 'many' side (the many side) pointing to the primary key of the 'one' side (the one side). Example: 1 Department has many Employees."
     },
     {
         id: 42,
         category: "SQL",
-        question: "RANK() và DENSE_RANK() khác nhau thế nào?",
+        question: "How do RANK() and DENSE_RANK() differ?",
         options: [
-            "Không có khác biệt",
-            "RANK() bỏ qua số thứ hạng sau tie, DENSE_RANK() không bỏ qua",
-            "DENSE_RANK() chỉ dùng cho số nguyên",
-            "RANK() nhanh hơn"
+            "No difference",
+            "RANK() skips ranks after tie, DENSE_RANK() doesn't skip",
+            "DENSE_RANK() is only for integers",
+            "RANK() is faster"
         ],
         correct: 1,
-        explanation: "Với dữ liệu [100, 100, 90]:<br>• <strong>RANK()</strong>: 1, 1, 3 (bỏ qua 2)<br>• <strong>DENSE_RANK()</strong>: 1, 1, 2 (không bỏ qua)"
+        explanation: "With data [100, 100, 90]:<br>• <strong>RANK()</strong>: 1, 1, 3 (skips 2)<br>• <strong>DENSE_RANK()</strong>: 1, 1, 2 (doesn't skip)"
     },
     {
         id: 43,
         category: "NoSQL",
-        question: "Cassandra thuộc loại database nào?",
+        question: "What type of database is Cassandra?",
         options: [
             "Document store",
             "Wide-column store (Column-family)",
@@ -557,12 +557,12 @@ const quizData = [
             "Key-value store"
         ],
         correct: 1,
-        explanation: "<strong>Cassandra</strong> là <strong>Wide-Column Store</strong> (Column-Family). Mỗi row có thể có số lượng columns khác nhau. Tốt cho write-heavy, time-series data."
+        explanation: "<strong>Cassandra</strong> is a <strong>Wide-Column Store</strong> (Column-Family). Each row can have different numbers of columns. Good for write-heavy, time-series data."
     },
     {
         id: 44,
         category: "SQL",
-        question: "Query nào tìm employees có salary cao hơn trung bình?",
+        question: "Which query finds employees with salary higher than average?",
         options: [
             "SELECT * FROM employees WHERE salary > AVG(salary)",
             "SELECT * FROM employees WHERE salary > (SELECT AVG(salary) FROM employees)",
@@ -570,85 +570,85 @@ const quizData = [
             "SELECT * FROM employees WHERE salary > AVERAGE"
         ],
         correct: 1,
-        explanation: "Cần dùng <strong>subquery</strong>: <code>SELECT * FROM employees WHERE salary > (SELECT AVG(salary) FROM employees)</code>. Không thể dùng aggregate function trực tiếp trong WHERE."
+        explanation: "Need to use <strong>subquery</strong>: <code>SELECT * FROM employees WHERE salary > (SELECT AVG(salary) FROM employees)</code>. Cannot use aggregate function directly in WHERE."
     },
     {
         id: 45,
         category: "Transaction",
-        question: "Snapshot Isolation giải quyết vấn đề gì?",
+        question: "What problem does Snapshot Isolation solve?",
         options: [
             "Deadlock",
-            "Non-repeatable reads và Phantom reads",
+            "Non-repeatable reads and Phantom reads",
             "Disk full",
             "Network latency"
         ],
         correct: 1,
-        explanation: "<strong>Snapshot Isolation</strong> đảm bảo transaction nhìn thấy <em>snapshot</em> của database tại thờ điểm bắt đầu transaction, ngăn <strong>non-repeatable reads</strong> và <strong>phantom reads</strong>."
+        explanation: "<strong>Snapshot Isolation</strong> ensures a transaction sees a <em>snapshot</em> of the database at the start of the transaction, preventing <strong>non-repeatable reads</strong> and <strong>phantom reads</strong>."
     },
     {
         id: 46,
         category: "SQL",
-        question: "Sự khác biệt giữa VIEW và MATERIALIZED VIEW?",
+        question: "What is the difference between VIEW and MATERIALIZED VIEW?",
         options: [
-            "Không có khác biệt",
-            "VIEW là virtual, MATERIALIZED VIEW lưu kết quả vật lý",
-            "MATERIALIZED VIEW nhanh hơn VIEW",
-            "Cả B và C"
+            "No difference",
+            "VIEW is virtual, MATERIALIZED VIEW stores physical results",
+            "MATERIALIZED VIEW is faster than VIEW",
+            "Both B and C"
         ],
         correct: 3,
-        explanation: "<strong>VIEW</strong>: Virtual table, query lại mỗi lần gọi.<br><strong>MATERIALIZED VIEW</strong>: Lưu kết quả vật lý, cần refresh. Nhanh hơn cho query phức tạp nhưng dữ liệu có thể stale."
+        explanation: "<strong>VIEW</strong>: Virtual table, re-queries each time called.<br><strong>MATERIALIZED VIEW</strong>: Stores physical results, needs refresh. Faster for complex queries but data may be stale."
     },
     {
         id: 47,
         category: "Database Design",
-        question: "Tại sao không nên dùng SELECT * trong production?",
+        question: "Why should SELECT * not be used in production?",
         options: [
-            "Viết dài hơn",
-            "Lấy thừa cột không cần, tăng network traffic, dễ break khi schema thay đổi",
-            "Không thể dùng với JOIN",
-            "Chậm hơn khi có index"
+            "Longer to write",
+            "Fetches unnecessary columns, increases network traffic, breaks easily when schema changes",
+            "Cannot be used with JOIN",
+            "Slower when there is index"
         ],
         correct: 1,
-        explanation: "<strong>SELECT *</strong> nên tránh vì:<br>• Lấy thừa cột không cần → tăng I/O và network<br>• Dễ break khi thêm/xóa cột<br>• Không dùng được covering index hiệu quả"
+        explanation: "<strong>SELECT *</strong> should be avoided because:<br>• Fetches unnecessary columns → increases I/O and network<br>• Breaks easily when columns are added/removed<br>• Cannot use covering index effectively"
     },
     {
         id: 48,
         category: "SQL",
-        question: "PIVOT operation dùng để làm gì?",
+        question: "What is the PIVOT operation used for?",
         options: [
-            "Xoay bảng từ dạng row thành column",
-            "Tạo index",
-            "Sao lưu database",
-            "Kết nối 2 bảng"
+            "Rotate table from row-based to column-based",
+            "Create index",
+            "Backup database",
+            "Connect 2 tables"
         ],
         correct: 0,
-        explanation: "<strong>PIVOT</strong> chuyển dữ liệu từ <em>row-based</em> thành <em>column-based</em>. Ví dụ: chuyển dữ liệu doanh số theo từng tháng (rows) thành các cột Jan, Feb, Mar..."
+        explanation: "<strong>PIVOT</strong> transforms data from <em>row-based</em> to <em>column-based</em>. Example: transform sales data by month (rows) into columns Jan, Feb, Mar..."
     },
     {
         id: 49,
         category: "NoSQL",
-        question: "Sharding trong database là gì?",
+        question: "What is Sharding in a database?",
         options: [
-            "Tạo index",
-            "Chia dữ liệu thành nhiều phần lưu ở các server khác nhau",
-            "Mã hóa dữ liệu",
-            "Sao lưu database"
+            "Create index",
+            "Split data into multiple parts stored on different servers",
+            "Encrypt data",
+            "Backup database"
         ],
         correct: 1,
-        explanation: "<strong>Sharding</strong> là kỹ thuật <em>phân chia dữ liệu</em> (theo range, hash, hoặc geo) lưu trên nhiều server khác nhau để <strong>scale horizontally</strong> và phân tải."
+        explanation: "<strong>Sharding</strong> is a technique to <em>split data</em> (by range, hash, or geo) across multiple servers to <strong>scale horizontally</strong> and distribute load."
     },
     {
         id: 50,
         category: "SQL",
-        question: "Query execution plan dùng để làm gì?",
+        question: "What is a Query Execution Plan used for?",
         options: [
-            "Tạo bảng mới",
-            "Phân tích và tối ưu cách database thực thi query",
-            "Sao lưu dữ liệu",
-            "Tạo user mới"
+            "Create new table",
+            "Analyze and optimize how the database executes queries",
+            "Backup data",
+            "Create new user"
         ],
         correct: 1,
-        explanation: "<strong>Execution Plan</strong> cho biết database sẽ <em>thực thi query như thế nào</em> (dùng index nào, join theo thứ tự nào...). Dùng để <strong>tối ưu performance</strong> và debug query chậm."
+        explanation: "<strong>Execution Plan</strong> shows how the database will <em>execute the query</em> (which index to use, join order...). Used to <strong>optimize performance</strong> and debug slow queries."
     }
 ];
 
@@ -683,7 +683,7 @@ function renderQuestion() {
     const q = quizData[currentQuestion];
     
     // Update header
-    questionCounter.textContent = `Câu ${currentQuestion + 1}/${quizData.length}`;
+    questionCounter.textContent = `Question ${currentQuestion + 1}/${quizData.length}`;
     categoryBadge.textContent = q.category;
     questionText.textContent = q.question;
     
@@ -724,12 +724,12 @@ function renderQuestion() {
     // Show/hide answer section
     if (answerRevealed[currentQuestion]) {
         answerSection.style.display = 'block';
-        correctAnswer.textContent = `Đáp án đúng: ${labels[q.correct]}`;
+        correctAnswer.textContent = `Correct answer: ${labels[q.correct]}`;
         explanation.innerHTML = q.explanation;
-        showAnswerBtn.textContent = 'Ẩn đáp án';
+        showAnswerBtn.textContent = 'Hide answer';
     } else {
         answerSection.style.display = 'none';
-        showAnswerBtn.textContent = 'Xem đáp án';
+        showAnswerBtn.textContent = 'Show answer';
     }
 }
 
@@ -771,7 +771,7 @@ function nextQuestion() {
 
 function updateNavigation() {
     prevBtn.disabled = currentQuestion === 0;
-    nextBtn.textContent = currentQuestion === quizData.length - 1 ? 'Hoàn thành →' : 'Câu sau →';
+    nextBtn.textContent = currentQuestion === quizData.length - 1 ? 'Finish →' : 'Next →';
 }
 
 function showCompletion() {
