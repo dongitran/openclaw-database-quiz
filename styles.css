@@ -255,7 +255,7 @@ main {
 .option:hover {
     border-color: rgba(255, 255, 255, 0.5);
     background: rgba(255, 255, 255, 0.2);
-    transform: translateX(8px);
+    transform: translateX(4px);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
@@ -268,7 +268,6 @@ main {
 .option.correct {
     border-color: var(--success);
     background: linear-gradient(135deg, rgba(16, 185, 129, 0.5) 0%, rgba(52, 211, 153, 0.5) 100%);
-    animation: correctPulse 0.5s ease, glowSuccess 2s ease infinite;
 }
 
 .option.wrong {
