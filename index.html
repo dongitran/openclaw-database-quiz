@@ -10,15 +10,10 @@
     <div class="container">
         <header>
             <h1>🗄️ Database Quiz</h1>
-            <p class="subtitle">100 Questions about Databases</p>
         </header>
 
         <main>
             <div class="quiz-card">
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill"></div>
-                </div>
-                
                 <div class="question-header">
                     <span class="question-counter" id="questionCounter">Question 1/100</span>
                     <span class="category-badge" id="categoryBadge">SQL</span>
@@ -30,13 +25,6 @@
                     <div class="options" id="optionsContainer">
                         <!-- Options will be inserted here -->
                     </div>
-                </div>
-
-                <div class="answer-section" id="answerSection" style="display: none;">
-                    <div class="answer-header">
-                        <span class="correct-answer" id="correctAnswer"></span>
-                    </div>
-                    <div class="explanation" id="explanation"></div>
                 </div>
 
                 <div class="actions">
@@ -53,10 +41,23 @@
                 <button class="btn btn-primary" onclick="restartQuiz()">Start Over</button>
             </div>
         </main>
+    </div>
 
-        <footer>
-            <p>Made with ❤️ for Database learners</p>
-        </footer>
+    <!-- Answer Modal -->
+    <div class="modal-overlay" id="answerModal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <span class="modal-title" id="modalTitle">Answer</span>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="correct-answer" id="correctAnswer"></div>
+                <div class="explanation" id="explanation"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="closeModal()">Got it</button>
+            </div>
+        </div>
     </div>
 
     <script src="quiz.js"></script>

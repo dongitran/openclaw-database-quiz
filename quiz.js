@@ -1305,22 +1305,22 @@ const quizData = [
 // Quiz State
 let currentQuestion = 0;
 let userAnswers = new Array(quizData.length).fill(null);
-let answerRevealed = new Array(quizData.length).fill(false);
 
 // DOM Elements
 const questionCounter = document.getElementById('questionCounter');
 const categoryBadge = document.getElementById('categoryBadge');
 const questionText = document.getElementById('questionText');
 const optionsContainer = document.getElementById('optionsContainer');
-const answerSection = document.getElementById('answerSection');
-const correctAnswer = document.getElementById('correctAnswer');
-const explanation = document.getElementById('explanation');
-const progressFill = document.getElementById('progressFill');
 const prevBtn = document.getElementById('prevBtn');
 const nextBtn = document.getElementById('nextBtn');
 const showAnswerBtn = document.getElementById('showAnswerBtn');
 const quizComplete = document.getElementById('quizComplete');
 const quizCard = document.querySelector('.quiz-card');
+
+// Modal Elements
+const answerModal = document.getElementById('answerModal');
+const correctAnswer = document.getElementById('correctAnswer');
+const explanation = document.getElementById('explanation');
 
 // Initialize
 function init() {
@@ -1337,10 +1337,6 @@ function renderQuestion() {
     categoryBadge.textContent = q.category;
     questionText.textContent = q.question;
     
-    // Update progress
-    const progress = ((currentQuestion + 1) / quizData.length) * 100;
-    progressFill.style.width = `${progress}%`;
-    
     // Render options
     optionsContainer.innerHTML = '';
     const labels = ['A', 'B', 'C', 'D'];
@@ -1348,19 +1344,6 @@ function renderQuestion() {
     q.options.forEach((option, index) => {
         const optionEl = document.createElement('div');
         optionEl.className = 'option';
-        
-        // Add classes based on state
-        if (userAnswers[currentQuestion] === index) {
-            optionEl.classList.add('selected');
-        }
-        
-        if (answerRevealed[currentQuestion]) {
-            if (index === q.correct) {
-                optionEl.classList.add('correct');
-            } else if (userAnswers[currentQuestion] === index && index !== q.correct) {
-                optionEl.classList.add('wrong');
-            }
-        }
         
         optionEl.innerHTML = `
             <span class="option-letter">${labels[index]}</span>
@@ -1370,33 +1353,51 @@ function renderQuestion() {
         optionEl.onclick = () => selectOption(index);
         optionsContainer.appendChild(optionEl);
     });
-    
-    // Show/hide answer section
-    if (answerRevealed[currentQuestion]) {
-        answerSection.style.display = 'block';
-        correctAnswer.textContent = `Correct answer: ${labels[q.correct]}`;
-        explanation.innerHTML = q.explanation;
-        showAnswerBtn.textContent = 'Hide answer';
-    } else {
-        answerSection.style.display = 'none';
-        showAnswerBtn.textContent = 'Show answer';
-    }
 }
 
-// Select an option
+// Select an option - immediate feedback
 function selectOption(index) {
+    const q = quizData[currentQuestion];
     userAnswers[currentQuestion] = index;
-    renderQuestion();
+    
+    // Get all option elements
+    const optionEls = optionsContainer.querySelectorAll('.option');
+    const labels = ['A', 'B', 'C', 'D'];
+    
+    optionEls.forEach((el, i) => {
+        el.classList.remove('selected');
+        
+        if (i === q.correct) {
+            // Always highlight correct answer in green
+            el.classList.add('correct');
+        } else if (i === index && i !== q.correct) {
+            // Highlight wrong answer in red only if user selected it
+            el.classList.add('wrong');
+        }
+        
+        // Disable further clicks
+        el.onclick = null;
+        el.style.cursor = 'default';
+    });
 }
 
-// Show/hide answer
+// Show answer in modal
 function showAnswer() {
-    if (answerRevealed[currentQuestion]) {
-        answerRevealed[currentQuestion] = false;
-    } else {
-        answerRevealed[currentQuestion] = true;
+    const q = quizData[currentQuestion];
+    const labels = ['A', 'B', 'C', 'D'];
+    
+    correctAnswer.textContent = `Correct answer: ${labels[q.correct]}`;
+    explanation.innerHTML = q.explanation;
+    
+    answerModal.classList.add('active');
+}
+
+// Close modal
+function closeModal(event) {
+    // Close if clicking overlay or close button, or if event is null (manual call)
+    if (!event || event.target === answerModal) {
+        answerModal.classList.remove('active');
     }
-    renderQuestion();
 }
 
 // Navigation
@@ -1432,8 +1433,8 @@ function showCompletion() {
 function restartQuiz() {
     currentQuestion = 0;
     userAnswers = new Array(quizData.length).fill(null);
-    answerRevealed = new Array(quizData.length).fill(false);
     quizCard.style.display = 'flex';
+    quizCard.style.flexDirection = 'column';
     quizComplete.style.display = 'none';
     renderQuestion();
     updateNavigation();
@@ -1442,6 +1443,12 @@ function restartQuiz() {
 // Keyboard navigation
 document.addEventListener('keydown', (e) => {
     if (quizComplete.style.display === 'block') return;
+    
+    // Close modal on Escape
+    if (e.key === 'Escape' && answerModal.classList.contains('active')) {
+        closeModal();
+        return;
+    }
     
     if (e.key === 'ArrowLeft' && !prevBtn.disabled) {
         prevQuestion();
