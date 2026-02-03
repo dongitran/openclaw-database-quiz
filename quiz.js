@@ -1406,6 +1406,13 @@ function updateBackgroundGradient() {
 
 // Initialize
 function init() {
+    // Ensure quiz data exists
+    if (!quizData || quizData.length === 0) {
+        console.error('Quiz data is empty!');
+        questionText.textContent = 'Error: Quiz data not found';
+        return;
+    }
+    
     shuffleQuiz();
     userAnswers = new Array(shuffledQuizData.length).fill(null);
     renderQuestion();
@@ -1415,7 +1422,18 @@ function init() {
 
 // Render current question
 function renderQuestion() {
+    // Ensure data is loaded
+    if (!shuffledQuizData || shuffledQuizData.length === 0) {
+        console.error('Quiz data not loaded yet');
+        return;
+    }
+    
     const q = shuffledQuizData[currentQuestion];
+    
+    if (!q) {
+        console.error('Question not found at index', currentQuestion);
+        return;
+    }
 
     // Update header
     questionCounter.textContent = `Question ${currentQuestion + 1}/${shuffledQuizData.length}`;
@@ -1584,5 +1602,12 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// Start
-init();
+// Start when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    try {
+        init();
+    } catch (error) {
+        console.error('Failed to initialize quiz:', error);
+        questionText.textContent = 'Failed to load quiz. Please refresh the page.';
+    }
+});
