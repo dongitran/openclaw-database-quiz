@@ -1723,8 +1723,13 @@ function shuffleQuiz() {
     // Shuffle the order of questions
     const shuffledQuestions = fisherYatesShuffle(quizData);
     
-    // For each question, shuffle the options and update correct index
+    // For each question, shuffle the options and update correct index (only for MCQ)
     shuffledQuizData = shuffledQuestions.map(q => {
+        // Open-ended questions don't have options to shuffle
+        if (q.type === 'open') {
+            return q;
+        }
+        
         // Create array of [option, originalIndex] pairs
         const optionsWithIndex = q.options.map((opt, idx) => ({
             text: opt,
