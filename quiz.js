@@ -1406,14 +1406,33 @@ function updateBackgroundGradient() {
 
 // Initialize
 function init() {
+    console.log('Initializing quiz...');
+    
+    // Re-query DOM elements to ensure they're available
+    const questionTextEl = document.getElementById('questionText');
+    const questionCounterEl = document.getElementById('questionCounter');
+    const categoryBadgeEl = document.getElementById('categoryBadge');
+    const optionsContainerEl = document.getElementById('optionsContainer');
+    
+    console.log('DOM Elements:', {
+        questionText: !!questionTextEl,
+        questionCounter: !!questionCounterEl,
+        categoryBadge: !!categoryBadgeEl,
+        optionsContainer: !!optionsContainerEl
+    });
+    
     // Ensure quiz data exists
     if (!quizData || quizData.length === 0) {
         console.error('Quiz data is empty!');
-        questionText.textContent = 'Error: Quiz data not found';
+        if (questionTextEl) questionTextEl.textContent = 'Error: Quiz data not found';
         return;
     }
     
+    console.log('Quiz data loaded:', quizData.length, 'questions');
+    
     shuffleQuiz();
+    console.log('Shuffled quiz:', shuffledQuizData.length, 'questions');
+    
     userAnswers = new Array(shuffledQuizData.length).fill(null);
     renderQuestion();
     updateNavigation();
@@ -1422,6 +1441,12 @@ function init() {
 
 // Render current question
 function renderQuestion() {
+    // Re-query DOM elements to ensure they're available
+    const questionTextEl = document.getElementById('questionText');
+    const questionCounterEl = document.getElementById('questionCounter');
+    const categoryBadgeEl = document.getElementById('categoryBadge');
+    const optionsContainerEl = document.getElementById('optionsContainer');
+    
     // Ensure data is loaded
     if (!shuffledQuizData || shuffledQuizData.length === 0) {
         console.error('Quiz data not loaded yet');
@@ -1435,34 +1460,44 @@ function renderQuestion() {
         return;
     }
 
+    console.log('Rendering question', currentQuestion, ':', q.question.substring(0, 50));
+
     // Update header
-    questionCounter.textContent = `Question ${currentQuestion + 1}/${shuffledQuizData.length}`;
+    if (questionCounterEl) {
+        questionCounterEl.textContent = `Question ${currentQuestion + 1}/${shuffledQuizData.length}`;
+    }
     
     // Update category badge with emoji and color
     const emoji = categoryEmojis[q.category] || '💡';
-    categoryBadge.textContent = `${emoji} ${q.category}`;
-    categoryBadge.className = 'category-badge';
-    const categoryClass = 'category-' + q.category.replace(/\s+/g, '\\ ').replace(/&/g, '\\&');
-    categoryBadge.classList.add(categoryClass);
+    if (categoryBadgeEl) {
+        categoryBadgeEl.textContent = `${emoji} ${q.category}`;
+        categoryBadgeEl.className = 'category-badge';
+        const categoryClass = 'category-' + q.category.replace(/\s+/g, '\\ ').replace(/&/g, '\\&');
+        categoryBadgeEl.classList.add(categoryClass);
+    }
     
-    questionText.textContent = q.question;
+    if (questionTextEl) {
+        questionTextEl.textContent = q.question;
+    }
     
     // Render options
-    optionsContainer.innerHTML = '';
-    const labels = ['A', 'B', 'C', 'D'];
-    
-    q.options.forEach((option, index) => {
-        const optionEl = document.createElement('div');
-        optionEl.className = 'option';
+    if (optionsContainerEl) {
+        optionsContainerEl.innerHTML = '';
+        const labels = ['A', 'B', 'C', 'D'];
         
-        optionEl.innerHTML = `
-            <span class="option-letter">${labels[index]}</span>
-            <span class="option-text">${option}</span>
-        `;
-        
-        optionEl.onclick = () => selectOption(index);
-        optionsContainer.appendChild(optionEl);
-    });
+        q.options.forEach((option, index) => {
+            const optionEl = document.createElement('div');
+            optionEl.className = 'option';
+            
+            optionEl.innerHTML = `
+                <span class="option-letter">${labels[index]}</span>
+                <span class="option-text">${option}</span>
+            `;
+            
+            optionEl.onclick = () => selectOption(index);
+            optionsContainerEl.appendChild(optionEl);
+        });
+    }
 }
 
 // Select an option - immediate feedback
@@ -1471,7 +1506,8 @@ function selectOption(index) {
     userAnswers[currentQuestion] = index;
     
     // Get all option elements
-    const optionEls = optionsContainer.querySelectorAll('.option');
+    const optionsContainerEl = document.getElementById('optionsContainer');
+    const optionEls = optionsContainerEl ? optionsContainerEl.querySelectorAll('.option') : [];
     const labels = ['A', 'B', 'C', 'D'];
     
     optionEls.forEach((el, i) => {
@@ -1521,8 +1557,10 @@ function prevQuestion() {
 }
 
 function nextQuestion() {
+    console.log('Next clicked, current:', currentQuestion);
     if (currentQuestion < shuffledQuizData.length - 1) {
         currentQuestion++;
+        console.log('Moving to question:', currentQuestion);
         renderQuestion();
         updateNavigation();
         updateBackgroundGradient();
