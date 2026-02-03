@@ -649,6 +649,656 @@ const quizData = [
         ],
         correct: 1,
         explanation: "<strong>Execution Plan</strong> shows how the database will <em>execute the query</em> (which index to use, join order...). Used to <strong>optimize performance</strong> and debug slow queries."
+    },
+    {
+        id: 51,
+        category: "Advanced SQL",
+        question: "What does the LAG() window function do?",
+        options: [
+            "Creates a delay in query execution",
+            "Returns the value from the previous row in the partition",
+            "Sorts data in descending order",
+            "Locks the table for reading"
+        ],
+        correct: 1,
+        explanation: "<strong>LAG()</strong> lets you look at the <em>previous row</em> without joining. Example: Compare today's sales with yesterday's using <code>LAG(sales, 1) OVER (ORDER BY date)</code>."
+    },
+    {
+        id: 52,
+        category: "Advanced SQL",
+        question: "What does LEAD() function do compared to LAG()?",
+        options: [
+            "LEAD looks at the next row, LAG looks at the previous row",
+            "LEAD is faster than LAG",
+            "LEAD works only on numbers, LAG works on all types",
+            "No difference between them"
+        ],
+        correct: 0,
+        explanation: "<strong>LEAD()</strong> looks at the <em>next row</em> (forward), while <strong>LAG()</strong> looks at the <em>previous row</em> (backward). Use LEAD to see what happens next, LAG to see what happened before."
+    },
+    {
+        id: 53,
+        category: "Advanced SQL",
+        question: "What does NTILE(n) do?",
+        options: [
+            "Divides rows into n equal buckets/groups",
+            "Creates n copies of the table",
+            "Splits a string into n parts",
+            "Allocates n bytes of memory"
+        ],
+        correct: 0,
+        explanation: "<strong>NTILE(4)</strong> splits all rows into <em>4 equal groups</em> (quartiles). Great for finding top 25% performers or creating percentile rankings."
+    },
+    {
+        id: 54,
+        category: "Advanced SQL",
+        question: "What is a Recursive CTE used for?",
+        options: [
+            "Repeating the same query multiple times",
+            "Querying hierarchical/tree-structured data",
+            "Creating infinite loops",
+            "Backing up data recursively"
+        ],
+        correct: 1,
+        explanation: "<strong>Recursive CTE</strong> is perfect for <em>hierarchical data</em> like org charts or folder structures. It keeps calling itself until it reaches the end of the tree."
+    },
+    {
+        id: 55,
+        category: "Advanced SQL",
+        question: "What is a Correlated Subquery?",
+        options: [
+            "A subquery that depends on the outer query",
+            "A subquery that runs faster than the main query",
+            "A query that correlates two tables",
+            "A backup query for failed main queries"
+        ],
+        correct: 0,
+        explanation: "<strong>Correlated Subquery</strong> runs <em>once for each row</em> in the outer query. It references columns from the outer query, making it slower but powerful for row-by-row comparisons."
+    },
+    {
+        id: 56,
+        category: "Advanced SQL",
+        question: "What is SQL Injection?",
+        options: [
+            "Injecting SQL code into a database engine",
+            "A security attack where malicious SQL is inserted via user input",
+            "Adding SQL functions to a programming language",
+            "Optimizing SQL queries with hints"
+        ],
+        correct: 1,
+        explanation: "<strong>SQL Injection</strong> is when attackers sneak <em>malicious SQL</em> through user inputs (like search boxes). Example: entering <code>'; DROP TABLE users; --</code> to delete data. Always use parameterized queries!"
+    },
+    {
+        id: 57,
+        category: "Advanced SQL",
+        question: "What's the main difference between Stored Procedures and Functions?",
+        options: [
+            "Functions can return values, stored procedures cannot",
+            "Stored procedures can have side effects (INSERT/UPDATE), functions should be pure",
+            "Stored procedures are faster",
+            "Functions can only do math"
+        ],
+        correct: 1,
+        explanation: "<strong>Stored Procedures</strong> can modify data and don't have to return values. <strong>Functions</strong> should be pure (no side effects) and must return a value. Think: procedures 'do things', functions 'calculate things'."
+    },
+    {
+        id: 58,
+        category: "Advanced SQL",
+        question: "What is a Database Trigger?",
+        options: [
+            "A button that starts a query",
+            "Code that automatically runs when certain events happen (INSERT/UPDATE/DELETE)",
+            "A tool for importing data",
+            "A type of database index"
+        ],
+        correct: 1,
+        explanation: "<strong>Triggers</strong> are like <em>automatic reactions</em>. When someone INSERTS a row, the trigger can automatically update an audit log or validate data. They fire without being called directly."
+    },
+    {
+        id: 59,
+        category: "Advanced SQL",
+        question: "Which is better for preventing SQL Injection: string concatenation or parameterized queries?",
+        options: [
+            "String concatenation is faster",
+            "Parameterized queries - they separate code from data",
+            "Both are equally safe",
+            "SQL injection cannot be prevented"
+        ],
+        correct: 1,
+        explanation: "<strong>Parameterized queries</strong> treat user input as <em>data only</em>, never as SQL code. String concatenation lets attackers inject commands. Always use parameters: <code>SELECT * FROM users WHERE id = ?</code>"
+    },
+    {
+        id: 60,
+        category: "Advanced SQL",
+        question: "When should you use a Recursive CTE vs a simple JOIN?",
+        options: [
+            "Always use Recursive CTE for better performance",
+            "Use Recursive CTE for hierarchical/tree data with unknown depth",
+            "JOIN is always better",
+            "Recursive CTE is only for MySQL"
+        ],
+        correct: 1,
+        explanation: "Use <strong>Recursive CTE</strong> when you don't know how many levels deep the data goes (like an org chart where managers have managers). Regular JOINs need to know the depth in advance."
+    },
+    {
+        id: 61,
+        category: "Performance",
+        question: "What is Query Plan Analysis used for?",
+        options: [
+            "Creating database diagrams",
+            "Understanding how the database executes your query and finding bottlenecks",
+            "Planning database backups",
+            "Designing table schemas"
+        ],
+        correct: 1,
+        explanation: "<strong>Query Plan Analysis</strong> shows you the <em>step-by-step</em> of how your query runs. It reveals if the database is doing expensive full table scans instead of using indexes."
+    },
+    {
+        id: 62,
+        category: "Performance",
+        question: "What is Connection Pooling?",
+        options: [
+            "A swimming pool for database administrators",
+            "Reusing database connections instead of creating new ones each time",
+            "Pooling query results in memory",
+            "Connecting multiple databases together"
+        ],
+        correct: 1,
+        explanation: "<strong>Connection Pooling</strong> keeps a <em>pool of ready connections</em> open. Instead of the expensive 'handshake' every time, apps grab an existing connection. Like keeping a taxi waiting instead of calling a new one."
+    },
+    {
+        id: 63,
+        category: "Performance",
+        question: "What are Read Replicas?",
+        options: [
+            "Copies of data for backup only",
+            "Read-only copies of the database to distribute read traffic",
+            "Duplicate tables in the same database",
+            "Cached query results"
+        ],
+        correct: 1,
+        explanation: "<strong>Read Replicas</strong> are <em>copies</em> of your main database that only handle SELECT queries. They spread read traffic across multiple servers, like having multiple checkout lanes at a store."
+    },
+    {
+        id: 64,
+        category: "Performance",
+        question: "What is Database Caching?",
+        options: [
+            "Storing data in hidden folders",
+            "Storing frequently accessed data in fast memory (Redis/Memcached) to reduce database load",
+            "Compressing database files",
+            "Creating database backups"
+        ],
+        correct: 1,
+        explanation: "<strong>Caching</strong> stores popular data in <em>super-fast memory</em> (like Redis). Instead of querying the database every time, apps check the cache first - like keeping frequently used tools on your desk instead of the storage room."
+    },
+    {
+        id: 65,
+        category: "Performance",
+        question: "What is Table Partitioning?",
+        options: [
+            "Dividing a table into smaller physical pieces based on a column value",
+            "Splitting data across different databases",
+            "Creating backup copies of tables",
+            "Encrypting table data"
+        ],
+        correct: 0,
+        explanation: "<strong>Partitioning</strong> splits a huge table into <em>smaller chunks</em> (like by date or region). Queries only scan relevant partitions, not the entire table. Like organizing a filing cabinet by year instead of one big pile."
+    },
+    {
+        id: 66,
+        category: "Performance",
+        question: "Which type of database cache invalidation is safest but slowest?",
+        options: [
+            "Write-through (update cache and DB together)",
+            "Cache-aside (lazy loading)",
+            "Write-behind (async updates)",
+            "No invalidation"
+        ],
+        correct: 0,
+        explanation: "<strong>Write-through</strong> updates both cache and database together. It's <em>slower</em> because every write does double work, but data is always consistent. Like updating both your notebook and the shared document simultaneously."
+    },
+    {
+        id: 67,
+        category: "Performance",
+        question: "What is the N+1 Query Problem?",
+        options: [
+            "Running N queries plus 1 backup query",
+            "Running one query to get N items, then N more queries to get related data",
+            "A mathematical problem in databases",
+            "Adding N+1 indexes to a table"
+        ],
+        correct: 1,
+        explanation: "<strong>N+1 Problem</strong>: You fetch 100 users (1 query), then loop through and fetch each user's orders (100 queries) = 101 total! Fix with <strong>JOIN</strong> or <strong>eager loading</strong>."
+    },
+    {
+        id: 68,
+        category: "Performance",
+        question: "What is the benefit of Range Partitioning by date?",
+        options: [
+            "It makes dates look prettier",
+            "Old partitions can be archived/deleted without affecting recent data",
+            "It automatically sorts data",
+            "It encrypts old data"
+        ],
+        correct: 1,
+        explanation: "<strong>Range Partitioning</strong> by date lets you <em>drop old partitions</em> (like data from 2020) instantly without DELETE statements. Queries for recent data only scan recent partitions."
+    },
+    {
+        id: 69,
+        category: "Security",
+        question: "What is Encryption at Rest?",
+        options: [
+            "Encrypting data when it's being sent over the network",
+            "Encrypting data stored on disk",
+            "Encrypting data in RAM",
+            "Encrypting backup tapes only"
+        ],
+        correct: 1,
+        explanation: "<strong>Encryption at Rest</strong> scrambles data on the <em>hard drive</em>. If someone steals the physical disk, they can't read it. Different from Encryption in Transit (network)."
+    },
+    {
+        id: 70,
+        category: "Security",
+        question: "What is Encryption in Transit?",
+        options: [
+            "Encrypting data on the hard disk",
+            "Encrypting data while traveling over the network (TLS/SSL)",
+            "Encrypting data in backups",
+            "Encrypting data before deletion"
+        ],
+        correct: 1,
+        explanation: "<strong>Encryption in Transit</strong> protects data as it travels between your app and database (like HTTPS). Prevents eavesdroppers from reading data on the wire."
+    },
+    {
+        id: 71,
+        category: "Security",
+        question: "What is RBAC in database security?",
+        options: [
+            "Random Based Access Control",
+            "Role-Based Access Control - permissions assigned to roles, not individual users",
+            "Read-Backup-Access-Create",
+            "Row-Based Access Control"
+        ],
+        correct: 1,
+        explanation: "<strong>RBAC</strong> (Role-Based Access Control) gives permissions to <em>roles</em> (like 'analyst', 'admin'), then assigns users to roles. Easier than managing permissions for each person individually."
+    },
+    {
+        id: 72,
+        category: "Security",
+        question: "How can prepared statements prevent SQL Injection?",
+        options: [
+            "They make queries run faster",
+            "They separate SQL code from user data, treating input as values only",
+            "They encrypt the query",
+            "They check user passwords"
+        ],
+        correct: 1,
+        explanation: "<strong>Prepared statements</strong> send the SQL <em>structure</em> first, then data separately. The database knows input is <strong>never</strong> code, so malicious input can't execute commands."
+    },
+    {
+        id: 73,
+        category: "Security",
+        question: "What is Row-Level Security (RLS)?",
+        options: [
+            "Security that only applies to certain rows in the office",
+            "Restricting which rows a user can see based on their permissions",
+            "Encrypting individual rows differently",
+            "A backup strategy for important rows"
+        ],
+        correct: 1,
+        explanation: "<strong>Row-Level Security</strong> automatically filters rows based on <em>who's asking</em>. A sales rep sees only their customers' data, even though the table contains all customers."
+    },
+    {
+        id: 74,
+        category: "Security",
+        question: "What is Database Audit Logging?",
+        options: [
+            "Counting the number of tables",
+            "Recording who did what and when in the database",
+            "Checking database disk space",
+            "Testing database performance"
+        ],
+        correct: 1,
+        explanation: "<strong>Audit Logging</strong> keeps a <em>trail of all actions</em> - who accessed what data, when they did it, and what changed. Essential for compliance (SOX, HIPAA) and detecting breaches."
+    },
+    {
+        id: 75,
+        category: "Backup & Recovery",
+        question: "What is a Full Backup?",
+        options: [
+            "Backing up only changed data",
+            "A complete copy of all database data",
+            "Backing up just the indexes",
+            "Backing up user passwords only"
+        ],
+        correct: 1,
+        explanation: "<strong>Full Backup</strong> copies <em>everything</em>. It's the slowest but most complete. Like photocopying an entire book instead of just the changed pages."
+    },
+    {
+        id: 76,
+        category: "Backup & Recovery",
+        question: "What is a Differential Backup?",
+        options: [
+            "Backing up data that changed since the LAST full backup",
+            "Backing up differences between two databases",
+            "Backing up only text columns",
+            "A backup that checks for errors"
+        ],
+        correct: 0,
+        explanation: "<strong>Differential Backup</strong> captures only data that changed since the <em>last full backup</em>. Faster than full backup, but grows larger each day until the next full backup."
+    },
+    {
+        id: 77,
+        category: "Backup & Recovery",
+        question: "What is Transaction Log Backup?",
+        options: [
+            "Backing up the error log file",
+            "Backing up all transactions since the last log backup for point-in-time recovery",
+            "Backing up login attempts",
+            "Backing up table names only"
+        ],
+        correct: 1,
+        explanation: "<strong>Log Backup</strong> captures every transaction since the last backup. Combined with full backups, it enables <strong>point-in-time recovery</strong> - restore to any second, not just backup times."
+    },
+    {
+        id: 78,
+        category: "Backup & Recovery",
+        question: "What is Point-in-Time Recovery (PITR)?",
+        options: [
+            "Recovering data from a specific moment in time",
+            "Recovering only the current time's data",
+            "Scheduling backups at specific times",
+            "Backing up every hour"
+        ],
+        correct: 0,
+        explanation: "<strong>PITR</strong> lets you restore to <em>any exact moment</em> (like '2:34 PM yesterday'). Essential for recovering from mistakes - like if someone accidentally deleted data at 3 PM but you don't discover it until 5 PM."
+    },
+    {
+        id: 79,
+        category: "Backup & Recovery",
+        question: "In Master-Slave Replication, what can the Slave do?",
+        options: [
+            "Handle both reads and writes",
+            "Handle read queries only (replicates from Master)",
+            "Delete data from the Master",
+            "Create new tables independently"
+        ],
+        correct: 1,
+        explanation: "<strong>Master-Slave Replication</strong>: Master handles all writes, Slaves copy changes and handle <em>read queries</em>. Spreads read load. If Master dies, you can promote a Slave."
+    },
+    {
+        id: 80,
+        category: "Backup & Recovery",
+        question: "What is Master-Master Replication?",
+        options: [
+            "Two databases where both can accept writes",
+            "One master controlling two slaves",
+            "A master database with double backup",
+            "Replication that only works on weekends"
+        ],
+        correct: 0,
+        explanation: "<strong>Master-Master</strong> lets <em>both servers accept writes</em>. Changes sync between them. Good for high availability but complex - conflicts can occur if both edit the same row."
+    },
+    {
+        id: 81,
+        category: "Backup & Recovery",
+        question: "What is WAL (Write-Ahead Logging)?",
+        options: [
+            "Logging that happens after writing to disk",
+            "Writing changes to a log BEFORE updating actual data files",
+            "A type of backup storage",
+            "Logging out database users"
+        ],
+        correct: 1,
+        explanation: "<strong>WAL</strong> writes changes to a <em>log file first</em>, then to the actual database. If the system crashes mid-write, the log can replay and complete the operation. Like writing in a draft before finalizing."
+    },
+    {
+        id: 82,
+        category: "Cloud Databases",
+        question: "What is the main difference between Amazon RDS and Aurora?",
+        options: [
+            "RDS is free, Aurora is paid",
+            "Aurora is AWS-optimized, up to 5x faster than standard MySQL/PostgreSQL on RDS",
+            "RDS only supports MySQL",
+            "Aurora cannot be used with AWS"
+        ],
+        correct: 1,
+        explanation: "<strong>Amazon Aurora</strong> is AWS's <em>custom-built</em> database engine, compatible with MySQL/PostgreSQL but much faster. <strong>RDS</strong> hosts standard database engines on managed instances."
+    },
+    {
+        id: 83,
+        category: "Cloud Databases",
+        question: "What type of database is DynamoDB?",
+        options: [
+            "Relational database",
+            "Fully managed NoSQL key-value and document database",
+            "Graph database only",
+            "In-memory cache only"
+        ],
+        correct: 1,
+        explanation: "<strong>DynamoDB</strong> is AWS's <em>serverless NoSQL</em> database. Scales automatically, super fast (single-digit millisecond latency), and you only pay for what you use."
+    },
+    {
+        id: 84,
+        category: "Cloud Databases",
+        question: "What is Google BigQuery used for?",
+        options: [
+            "Running small transactional queries",
+            "Analyzing massive datasets (data warehouse) with SQL",
+            "Storing user session data",
+            "Real-time chat applications"
+        ],
+        correct: 1,
+        explanation: "<strong>BigQuery</strong> is Google's <em>data warehouse</em> for analyzing petabytes of data. Not for fast OLTP (transactions), but amazing for OLAP (analytics) - running reports on huge datasets."
+    },
+    {
+        id: 85,
+        category: "Cloud Databases",
+        question: "What is a Serverless Database?",
+        options: [
+            "A database without any servers",
+            "Database that automatically scales and you pay per use (no server management)",
+            "A database that only runs on weekends",
+            "A database with no security"
+        ],
+        correct: 1,
+        explanation: "<strong>Serverless databases</strong> (like DynamoDB, Aurora Serverless) <em>scale automatically</em> based on demand. You don't provision servers or worry about capacity - just pay for actual usage."
+    },
+    {
+        id: 86,
+        category: "Cloud Databases",
+        question: "What is Multi-Region Database Deployment?",
+        options: [
+            "Deploying to multiple data centers in the same city",
+            "Replicating data across different geographic regions for low latency and disaster recovery",
+            "Running multiple database versions",
+            "Deploying databases on multiple cloud providers"
+        ],
+        correct: 1,
+        explanation: "<strong>Multi-Region</strong> puts copies of your database in <em>different parts of the world</em>. Users in Asia query the Asia copy for speed. If one region fails, others keep running."
+    },
+    {
+        id: 87,
+        category: "Cloud Databases",
+        question: "Which AWS database service is best for real-time applications requiring microsecond latency?",
+        options: [
+            "RDS",
+            "ElastiCache (Redis/Memcached)",
+            "DynamoDB",
+            "Redshift"
+        ],
+        correct: 1,
+        explanation: "<strong>ElastiCache</strong> (managed Redis/Memcached) provides <em>microsecond</em> latency by keeping data in memory. Perfect for caching, session stores, and real-time leaderboards."
+    },
+    {
+        id: 88,
+        category: "Data Warehousing",
+        question: "What is the main difference between OLAP and OLTP?",
+        options: [
+            "OLAP is for transactions, OLTP is for analytics",
+            "OLTP handles daily transactions, OLAP handles analytical queries on large data",
+            "OLAP is faster than OLTP",
+            "OLTP is only for NoSQL"
+        ],
+        correct: 1,
+        explanation: "<strong>OLTP</strong> (Online Transaction Processing): Fast inserts/updates for daily operations (shopping cart). <strong>OLAP</strong> (Online Analytical Processing): Complex queries on huge datasets (sales reports)."
+    },
+    {
+        id: 89,
+        category: "Data Warehousing",
+        question: "What is a Star Schema?",
+        options: [
+            "A database shaped like a star",
+            "One central fact table surrounded by dimension tables",
+            "A schema with only 5 tables",
+            "A backup strategy"
+        ],
+        correct: 1,
+        explanation: "<strong>Star Schema</strong> has a <em>central fact table</em> (sales, orders) with foreign keys to surrounding <em>dimension tables</em> (customers, products, dates). Looks like a star diagram."
+    },
+    {
+        id: 90,
+        category: "Data Warehousing",
+        question: "What is a Snowflake Schema?",
+        options: [
+            "A schema that only works in winter",
+            "Star schema with normalized dimension tables (dimensions have sub-dimensions)",
+            "A database schema for storing images",
+            "A backup of the star schema"
+        ],
+        correct: 1,
+        explanation: "<strong>Snowflake Schema</strong> is like a Star Schema but <em>dimensions are further normalized</em>. A 'Product' dimension might link to 'Category' and 'Brand' tables, creating a snowflake pattern."
+    },
+    {
+        id: 91,
+        category: "Data Warehousing",
+        question: "What is the difference between ETL and ELT?",
+        options: [
+            "ETL is faster than ELT",
+            "ETL transforms before loading, ELT loads raw data then transforms in the warehouse",
+            "ELT is only for small data",
+            "They are the same thing"
+        ],
+        correct: 1,
+        explanation: "<strong>ETL</strong>: Extract → Transform → Load (transform on a separate server). <strong>ELT</strong>: Extract → Load → Transform (load raw data, then use warehouse power to transform). Cloud warehouses prefer ELT."
+    },
+    {
+        id: 92,
+        category: "Data Warehousing",
+        question: "Why do Data Warehouses use Columnar Storage?",
+        options: [
+            "It looks better in diagrams",
+            "Analytical queries read specific columns faster (don't need to load entire rows)",
+            "It's required by law",
+            "Columnar storage is cheaper"
+        ],
+        correct: 1,
+        explanation: "<strong>Columnar Storage</strong> stores data by <em>columns</em> instead of rows. When analyzing 'sum of sales', it only reads the sales column, not every column of every row. Much faster for analytics!"
+    },
+    {
+        id: 93,
+        category: "MongoDB",
+        question: "What is the MongoDB Aggregation Pipeline?",
+        options: [
+            "A physical pipeline for data",
+            "A framework for processing data through stages (filter, group, sort) like an assembly line",
+            "A backup process",
+            "A way to import data"
+        ],
+        correct: 1,
+        explanation: "<strong>Aggregation Pipeline</strong> processes data through <em>stages</em> in sequence: $match (filter) → $group (aggregate) → $sort. Like an assembly line where each stage transforms the data."
+    },
+    {
+        id: 94,
+        category: "MongoDB",
+        question: "What is MongoDB Sharding?",
+        options: [
+            "Breaking data into pieces using a shard key to distribute across servers",
+            "Encrypting MongoDB data",
+            "Creating backup shards",
+            "A type of MongoDB index"
+        ],
+        correct: 0,
+        explanation: "<strong>Sharding</strong> splits MongoDB data across <em>multiple servers</em> using a <strong>shard key</strong> (like user_id). Each shard holds a portion, allowing horizontal scaling beyond one server's capacity."
+    },
+    {
+        id: 95,
+        category: "MongoDB",
+        question: "What is a MongoDB Replica Set?",
+        options: [
+            "A set of duplicate documents",
+            "A group of MongoDB servers maintaining the same data for redundancy and failover",
+            "A backup file format",
+            "A type of query"
+        ],
+        correct: 1,
+        explanation: "<strong>Replica Set</strong> is <em>3+ MongoDB servers</em> that keep copies of the same data. One Primary handles writes, others replicate. If Primary dies, a Secondary automatically becomes Primary."
+    },
+    {
+        id: 96,
+        category: "MongoDB",
+        question: "What is a Compound Index in MongoDB?",
+        options: [
+            "An index on a single field",
+            "An index on multiple fields (like {lastName: 1, firstName: 1})",
+            "A combination of text and number indexes",
+            "An index that expires"
+        ],
+        correct: 1,
+        explanation: "<strong>Compound Index</strong> indexes <em>multiple fields together</em>. Like a phone book sorted by last name, then first name. Queries must use fields from left to right to benefit."
+    },
+    {
+        id: 97,
+        category: "MongoDB",
+        question: "What is the Schema Design Pattern 'Embedding' in MongoDB?",
+        options: [
+            "Putting documents inside other documents (denormalization)",
+            "Creating database schemas",
+            "Encrypting documents",
+            "Linking documents with foreign keys"
+        ],
+        correct: 0,
+        explanation: "<strong>Embedding</strong> stores related data <em>inside the same document</em> (like putting all comments inside a blog post document). Fast reads but duplication. Good for 1:few relationships."
+    },
+    {
+        id: 98,
+        category: "PostgreSQL",
+        question: "What is JSONB in PostgreSQL?",
+        options: [
+            "Just a string storing JSON text",
+            "Binary JSON storage that is parsed, indexable, and queryable",
+            "A backup format for JSON",
+            "JavaScript for PostgreSQL"
+        ],
+        correct: 1,
+        explanation: "<strong>JSONB</strong> stores JSON in a <em>binary, parsed format</em>. You can index it, query inside it (<code>data->>'name'</code>), and it's faster than storing JSON as text."
+    },
+    {
+        id: 99,
+        category: "PostgreSQL",
+        question: "How does PostgreSQL handle Array types?",
+        options: [
+            "PostgreSQL does not support arrays",
+            "PostgreSQL supports arrays as a native column type with array operators and indexes",
+            "Arrays must be stored as comma-separated strings",
+            "Arrays are only for numbers"
+        ],
+        correct: 1,
+        explanation: "<strong>PostgreSQL Arrays</strong> are <em>first-class citizens</em>. You can have <code>INTEGER[]</code> columns, query with <code>ANY</code>, use <code>unnest()</code> to expand them, and even create GiST indexes on arrays."
+    },
+    {
+        id: 100,
+        category: "PostgreSQL",
+        question: "What is PostgreSQL Full-Text Search?",
+        options: [
+            "Searching only in text files",
+            "Built-in text search with stemming, ranking, and relevance scoring",
+            "A third-party plugin only",
+            "Searching only full words, not partial matches"
+        ],
+        correct: 1,
+        explanation: "<strong>PostgreSQL Full-Text Search</strong> is <em>built-in</em>! It handles stemming (run/runs/running), stop words, ranking results by relevance, and special indexes (GIN) for speed. No Elasticsearch needed for many use cases!"
     }
 ];
 
