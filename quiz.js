@@ -1299,6 +1299,407 @@ const quizData = [
         ],
         correct: 1,
         explanation: "<strong>PostgreSQL Full-Text Search</strong> is <em>built-in</em>! It handles stemming (run/runs/running), stop words, ranking results by relevance, and special indexes (GIN) for speed. No Elasticsearch needed for many use cases!"
+    },
+    // 50 Scenario-Based Questions for Senior Fullstack Developers
+    {
+        id: 101,
+        category: "System Design",
+        type: "open",
+        question: "Scenario: You're designing a database for a ride-sharing app like Uber. The system needs to handle 1 million daily rides, real-time driver location updates, and complex pricing calculations. Users frequently search for nearby drivers. How would you design the schema and what database(s) would you choose?",
+        answer: "1. Use PostgreSQL for transactional data (rides, users, payments) with proper indexing on location columns using PostGIS extension. 2. Use Redis for real-time driver locations with geospatial queries and TTL on location updates. 3. Use a separate read replica for heavy analytics queries. 4. Partition ride history table by date for performance. 5. Consider using a separate OLAP database (like ClickHouse) for pricing analytics and ML model training.",
+        explanation: "This is a polyglot persistence scenario. PostgreSQL provides ACID guarantees for financial transactions. Redis handles high-write real-time location data efficiently. Separating read and write workloads prevents analytical queries from impacting user experience. Partitioning manages data growth over time."
+    },
+    {
+        id: 102,
+        category: "Performance",
+        type: "open",
+        question: "Scenario: Your MySQL database table reached 10 million rows and simple SELECT queries started taking 5+ seconds. The table has a primary key and a few foreign keys. Users report the app feels slow. What's your systematic approach to diagnose and fix this?",
+        answer: "1. Run EXPLAIN on slow queries to identify missing indexes or full table scans. 2. Check if the query uses proper WHERE clause filtering. 3. Add composite indexes for frequently queried column combinations. 4. Consider query rewriting to avoid SELECT *. 5. Implement pagination for large result sets. 6. If queries are still slow, consider horizontal partitioning (sharding) by user_id or date. 7. Enable query cache if read-heavy. 8. Monitor slow query log continuously.",
+        explanation: "Most performance issues stem from missing indexes or inefficient queries. EXPLAIN is your best friend. Adding indexes is usually the first fix, but be careful - too many indexes slow down writes. Sometimes the query logic itself needs optimization (e.g., avoiding N+1 queries)."
+    },
+    {
+        id: 103,
+        category: "Migration",
+        type: "open",
+        question: "Scenario: You need to migrate a 1TB PostgreSQL table to a new schema without downtime. The table is actively written to 24/7 by multiple services. The migration requires adding a new NOT NULL column with calculated values from existing data. How do you approach this?",
+        answer: "1. Add the new column as NULL first (no table rewrite needed). 2. Create a background job to populate the column in batches to avoid locking. 3. Use a trigger to keep new column updated for incoming writes during migration. 4. Once all rows are populated, add a CHECK constraint with NOT VALID to avoid full table scan. 5. Run VALIDATE CONSTRAINT in background. 6. Finally, alter column to NOT NULL. 7. Use pglogical or similar for zero-downtime cutover if needed.",
+        explanation: "PostgreSQL's ALTER TABLE acquires exclusive locks. Breaking the migration into steps prevents long locks. The NOT VALID + VALIDATE pattern allows adding constraints without locking. Triggers ensure consistency during the transition period."
+    },
+    {
+        id: 104,
+        category: "Scaling",
+        type: "open",
+        question: "Scenario: Your e-commerce database is hitting 90% CPU during Black Friday sales. You have 1 primary and 2 read replicas, but writes are becoming the bottleneck. The product catalog, user sessions, and order data are all in one PostgreSQL database. What strategies would you consider?",
+        answer: "1. Separate write-heavy and read-heavy data - move sessions to Redis. 2. Implement CQRS: use Elasticsearch for product search, keep PostgreSQL for transactions. 3. Use connection pooling (PgBouncer) to reduce connection overhead. 4. Implement write-behind caching for non-critical updates. 5. Consider sharding orders by region or time. 6. Use async processing (message queue) for non-real-time operations like sending emails. 7. Pre-compute and cache popular product listings.",
+        explanation: "When a monolithic database hits write limits, you need to split responsibilities. Redis for sessions offloads ephemeral data. CQRS separates read and write models. Sharding distributes write load. Async processing decouples critical and non-critical operations."
+    },
+    {
+        id: 105,
+        category: "Troubleshooting",
+        type: "open",
+        question: "Scenario: At 3 AM, your database replica lag suddenly jumps from 1 second to 15 minutes. The primary database shows high CPU but normal query patterns. The replica is running on identical hardware. What diagnostic steps would you take?",
+        answer: "1. Check replica's pg_stat_replication for lag details. 2. Look for long-running queries on replica blocking replication. 3. Check if vacuum or analyze is running, blocking replication slot. 4. Monitor WAL generation rate on primary - sudden spike indicates bulk operation. 5. Check network between primary and replica. 6. Look for lock conflicts on replica. 7. Consider if large DDL was executed (like CREATE INDEX CONCURRENTLY). 8. Check disk I/O on replica - saturation causes lag.",
+        explanation: "Replication lag usually comes from: replica blocking (locks, vacuum), WAL spike (bulk load), network issues, or resource saturation. Long-running queries on replicas can block replication if they hold locks. DDL operations can generate massive WAL."
+    },
+    {
+        id: 106,
+        category: "Data Consistency",
+        type: "open",
+        question: "Scenario: You're building a bank transfer feature. Two users transfer money to each other simultaneously. How do you ensure no money is lost or created, even if the application crashes mid-transfer?",
+        answer: "1. Use database transactions with proper isolation level (SERIALIZABLE or READ COMMITTED with row locking). 2. Always acquire locks in consistent order (by account_id) to prevent deadlocks. 3. Use pessimistic locking (SELECT FOR UPDATE) on both accounts before modifying. 4. Implement idempotency keys to prevent duplicate transfers on retry. 5. Store transfer state and use two-phase commit pattern. 6. Maintain an audit log table for all balance changes. 7. Run reconciliation jobs to detect and fix inconsistencies.",
+        explanation: "Financial operations require ACID guarantees. Consistent lock ordering prevents deadlocks. Pessimistic locking ensures no other transaction interferes. Idempotency prevents double-spending on retries. Audit logs provide traceability and enable reconciliation."
+    },
+    {
+        id: 107,
+        category: "Architecture",
+        type: "open",
+        question: "Scenario: Your startup's single PostgreSQL database is becoming a bottleneck. You have 500k daily active users and expect 10x growth in 6 months. The app has social features (feeds, likes, comments) and user-generated content. Design a database strategy for this growth.",
+        answer: "1. Keep user profiles and auth in PostgreSQL (ACID needed). 2. Move social feeds to Cassandra or ScyllaDB (write-heavy, time-series). 3. Use S3 for media storage with CDN. 4. Implement Elasticsearch for content search. 5. Use Redis for counters (likes, views) with periodic flush to DB. 6. Partition data by user_id or region. 7. Implement event sourcing for social actions. 8. Use read replicas for analytics. 9. Plan for CQRS - separate read and write models.",
+        explanation: "Different data has different needs. Relational data (users) stays in PostgreSQL. Social feeds need high write throughput (Cassandra). Search needs Elasticsearch. Media goes to object storage. This polyglot approach scales each component appropriately."
+    },
+    {
+        id: 108,
+        category: "Optimization",
+        type: "open",
+        question: "Scenario: Your analytics dashboard queries take 30+ seconds to load, timing out frequently. The queries aggregate data from 6 months of user activity (50M rows). Users need near real-time data. How would you optimize this?",
+        answer: "1. Create materialized views for common aggregations, refresh periodically. 2. Use columnar storage (Amazon Redshift, ClickHouse) for analytics. 3. Implement pre-aggregated summary tables updated by triggers or batch jobs. 4. Use approximate queries (HLL, HyperLogLog) for large counts. 5. Partition data by date, query only recent partitions. 6. Implement result caching (Redis) with TTL. 7. Use stream processing (Kafka + Flink) for real-time aggregations. 8. Consider data warehousing ETL pipeline.",
+        explanation: "Real-time analytics on large datasets requires different strategies than OLTP. Materialized views trade freshness for speed. Columnar storage is 10-100x faster for aggregations. Pre-aggregation eliminates expensive calculations at query time. Approximate algorithms provide fast estimates with minimal error."
+    },
+    {
+        id: 109,
+        category: "Security",
+        type: "open",
+        question: "Scenario: A security audit revealed your application has SQL injection vulnerabilities in legacy code. The codebase has 200+ raw SQL queries. How do you systematically fix this while minimizing risk of breaking functionality?",
+        answer: "1. Immediately implement WAF rules to block common SQL injection patterns. 2. Use automated tools (sqlmap, Semgrep) to identify vulnerable queries. 3. Migrate to parameterized queries/prepared statements - never concatenate user input. 4. Implement input validation layer (whitelist approach). 5. Use ORM for new code, gradually refactor legacy. 6. Add database-level protections: least privilege principles, query timeouts. 7. Enable query logging and set up alerts for suspicious patterns. 8. Run penetration testing after fixes. 9. Document secure coding practices for the team.",
+        explanation: "SQL injection is preventable with parameterized queries. Defense in depth: WAF for immediate protection, code fixes for long-term, database permissions as last resort. Automated tools help identify vulnerabilities at scale. Gradual migration reduces regression risk."
+    },
+    {
+        id: 110,
+        category: "Backup & Recovery",
+        type: "open",
+        question: "Scenario: Your production database suffered corruption and the last 6 hours of WAL files are missing. The last full backup was from yesterday. You have transaction logs in the application layer. How do you recover with minimal data loss?",
+        answer: "1. Restore from last night's full backup to new instance. 2. Apply available WAL files to recover to last known good state. 3. Use application transaction logs to replay missing transactions. 4. For critical missing data, check if any read replicas have more recent data. 5. Consider point-in-time recovery from cloud provider snapshots if available. 6. Document data loss window and identify affected users. 7. Implement automated WAL archiving (S3) to prevent future loss. 8. Set up real-time replication to minimize RPO.",
+        explanation: "Recovery requires multiple strategies. WAL is primary but application logs can fill gaps. Replicas might have more recent data. The goal is minimizing RPO (Recovery Point Objective). After recovery, fix backup strategy to prevent recurrence - automated WAL archiving is essential."
+    },
+    {
+        id: 111,
+        category: "System Design",
+        type: "open",
+        question: "Scenario: You're designing a real-time chat system for 10 million concurrent users. Messages need to be delivered within 100ms, and users expect message history to load instantly. How would you architect the database layer?",
+        answer: "1. Use Redis Cluster for real-time message routing and presence tracking. 2. Store recent messages (last 7 days) in Cassandra for fast writes and time-series queries. 3. Archive older messages to S3 with Parquet format for cost-effective storage. 4. Implement message fan-out on write for popular channels, on read for DMs. 5. Use Elasticsearch for full-text search across message history. 6. Implement connection pooling with WebSocket gateway tier. 7. Use CQRS pattern to separate read/write workloads. 8. Geo-distribute Redis and Cassandra clusters for low latency.",
+        explanation: "Chat systems need extremely low latency. Redis handles real-time routing with pub/sub. Cassandra's LSM-tree structure excels at high-write workloads. Message fan-out strategy depends on channel size - popular channels pre-compute recipient lists, DMs query on read. Archiving old data keeps hot storage fast."
+    },
+    {
+        id: 112,
+        category: "Performance",
+        type: "open",
+        question: "Scenario: Your API response time for a user dashboard increased from 200ms to 5 seconds. The query joins 8 tables to build the dashboard. You've already added indexes. What advanced techniques can you apply?",
+        answer: "1. Implement query result caching with Redis (cache-aside pattern). 2. Use materialized views for expensive aggregations, refresh asynchronously. 3. Decompose the monolithic query into smaller parallel queries (application-side join). 4. Implement data denormalization - store pre-computed dashboard data in a separate table. 5. Use read replicas to offload SELECT queries. 6. Implement GraphQL DataLoader pattern to batch and deduplicate queries. 7. Use database-specific optimizations like PostgreSQL's LATERAL joins. 8. Consider using a dedicated OLAP database for dashboard analytics.",
+        explanation: "Complex joins don't scale linearly. Caching eliminates repeated identical queries. Materialized views pre-compute expensive operations. Parallel queries can be faster than one complex query due to lock contention and query planner limitations. Denormalization trades write complexity for read speed."
+    },
+    {
+        id: 113,
+        category: "Migration",
+        type: "open",
+        question: "Scenario: You need to migrate from MySQL to PostgreSQL for a 500GB database with zero downtime. The app uses complex stored procedures that need rewriting. How do you plan this migration?",
+        answer: "1. Set up logical replication (pg_chameleon or Debezium) to sync MySQL to PostgreSQL in real-time. 2. Rewrite and test stored procedures incrementally in PostgreSQL. 3. Implement dual-write pattern: write to both databases during transition. 4. Use feature flags to gradually redirect read traffic to PostgreSQL. 5. Run shadow traffic - send production queries to PostgreSQL without affecting users. 6. Verify data consistency with checksums on both databases. 7. Plan rollback strategy with quick DNS cutover back to MySQL. 8. Monitor replication lag and consistency continuously.",
+        explanation: "Database migrations require a dual-running period. Logical replication keeps databases in sync. Dual-write ensures no data loss during transition. Feature flags allow gradual traffic shifting. Shadow testing validates PostgreSQL performance before cutover. Always have a rollback plan ready."
+    },
+    {
+        id: 114,
+        category: "Scaling",
+        type: "open",
+        question: "Scenario: Your PostgreSQL database has a single table that receives 50,000 writes per second - a logging/events table that's 2TB and growing. Queries are slowing down. How do you handle this scale?",
+        answer: "1. Implement time-based table partitioning (monthly or daily partitions). 2. Use declarative partitioning in PostgreSQL 12+ for automatic partition management. 3. Archive old partitions to cold storage (S3) and detach from main table. 4. Consider using TimescaleDB extension for time-series optimization. 5. Implement async batch inserts using COPY command or queue-based ingestion. 6. Use separate tablespaces for recent vs. old partitions. 7. Set up partition-wise joins for queries spanning multiple time periods. 8. Consider specialized time-series database (InfluxDB, ClickHouse) for pure event storage.",
+        explanation: "Time-series data at scale requires partitioning. PostgreSQL's native partitioning allows efficient partition pruning - queries only scan relevant partitions. Archiving old data keeps the working set small. TimescaleDB provides automatic chunking and compression. For extreme scale, specialized time-series databases outperform general-purpose SQL."
+    },
+    {
+        id: 115,
+        category: "Troubleshooting",
+        type: "open",
+        question: "Scenario: Your application suddenly shows 'too many connections' errors. The database max_connections is set to 500, but you're seeing intermittent failures. The connection pool is configured for 100 connections. What could be wrong and how do you diagnose it?",
+        answer: "1. Check pg_stat_activity for idle connections not being released properly. 2. Look for connection leaks - unclosed connections in application code. 3. Verify connection pool configuration - ensure max connections < database limit. 4. Check for long-running transactions holding connections. 5. Look for N+1 query patterns that exhaust pool during request spikes. 6. Implement connection pool monitoring (pgbouncer stats). 7. Check for connection storms during deployment or error scenarios. 8. Set appropriate connection timeouts and idle connection recycling.",
+        explanation: "Connection issues often stem from leaks or misconfiguration. Idle connections accumulate from exceptions without proper cleanup. Connection pool sizing must account for all application instances. Long transactions hold connections unnecessarily. Monitoring pg_stat_activity reveals connection patterns. PgBouncer helps manage connection multiplexing."
+    },
+    {
+        id: 116,
+        category: "Data Consistency",
+        type: "open",
+        question: "Scenario: You're building a distributed e-commerce system. A user places an order and payment succeeds, but inventory reservation fails due to network partition. How do you ensure data consistency across services?",
+        answer: "1. Implement Saga pattern with compensating transactions. 2. Use outbox pattern: write events to database table first, then publish via CDC. 3. Implement idempotency keys for all operations to prevent duplicates. 4. Use two-phase commit for critical financial transactions. 5. Design for eventual consistency with clear consistency boundaries. 6. Implement retry mechanisms with exponential backoff. 7. Use distributed tracing to track transaction flow. 8. Maintain audit log for all state changes with correlation IDs.",
+        explanation: "Distributed systems can't rely on ACID across services. Saga pattern sequences local transactions with compensating actions on failure. Outbox pattern ensures atomic 'database write + event publish'. Idempotency prevents double-charging or double-reserving. Accepting eventual consistency is necessary for distributed architectures."
+    },
+    {
+        id: 117,
+        category: "Architecture",
+        type: "open",
+        question: "Scenario: You need to design a multi-tenant SaaS application supporting 10,000 tenants with varying data sizes (100MB to 100GB per tenant). Data isolation and performance isolation are critical. What database architecture do you choose?",
+        answer: "1. Use schema-per-tenant approach for strong isolation with shared database cluster. 2. Implement row-level security (RLS) as additional safety layer. 3. Use connection pooling per schema to prevent cross-tenant resource contention. 4. Implement resource quotas and query timeouts per tenant. 5. Consider hybrid: small tenants share schemas, large tenants get dedicated schemas. 6. Use tenant-aware caching with namespace isolation. 7. Implement cross-tenant analytics via separate read-only replicas. 8. Automate tenant provisioning with schema templates.",
+        explanation: "Schema-per-tenant provides the best balance of isolation and operational simplicity. RLS adds defense-in-depth against application bugs. Resource quotas prevent noisy neighbor problems. Hybrid approaches optimize cost - shared infrastructure for small tenants, dedicated for enterprise. Automation is essential for managing thousands of schemas."
+    },
+    {
+        id: 118,
+        category: "Optimization",
+        type: "open",
+        question: "Scenario: Your reporting queries are scanning billions of rows and taking hours to complete. The same aggregations run repeatedly. Users need near real-time insights. What's your optimization strategy?",
+        answer: "1. Implement pre-aggregated summary tables updated by triggers or batch jobs. 2. Use columnar storage (Redshift, ClickHouse, BigQuery) for analytical workloads. 3. Create materialized views with incremental refresh strategies. 4. Implement result caching with Redis for frequently accessed reports. 5. Use approximate algorithms (HyperLogLog, Count-Min Sketch) for large cardinality counts. 6. Partition data and implement partition pruning for query optimization. 7. Use stream processing (Kafka + Flink) for real-time aggregations. 8. Move historical data to data warehouse, keep recent data in OLTP.",
+        explanation: "OLTP databases aren't designed for analytical workloads. Pre-aggregation eliminates repeated expensive calculations. Columnar storage is 10-100x faster for scans. Approximate algorithms trade tiny accuracy loss for massive speed gains. Stream processing enables real-time insights instead of batch. Separation of OLTP and OLAP is essential at scale."
+    },
+    {
+        id: 119,
+        category: "Trade-off Analysis",
+        type: "open",
+        question: "Scenario: You must choose between strong consistency and eventual consistency for a global user profile service. Users can update profiles from any region and expect immediate visibility. What factors influence your decision?",
+        answer: "1. Analyze consistency requirements: financial data needs strong consistency, profile pictures can be eventually consistent. 2. Consider user expectations: profile name changes should be immediate, avatar updates can have seconds delay. 3. Evaluate latency impact: strong consistency requires cross-region coordination (100-300ms). 4. Use CRDTs (Conflict-free Replicated Data Types) for mergeable data types. 5. Implement session consistency - users see their own writes immediately. 6. Use conflict resolution strategies: last-write-wins, vector clocks, or application-specific merge. 7. Consider hybrid: local cache for reads, synchronous write to nearest region, async replication. 8. Implement read-your-writes consistency as minimum guarantee.",
+        explanation: "Consistency is a spectrum, not binary. Different data elements have different consistency needs. CRDTs enable automatic conflict resolution for counters, sets, and certain text types. Session consistency maintains user trust while allowing replication lag. The choice depends on business requirements, not technical purity."
+    },
+    {
+        id: 120,
+        category: "Troubleshooting",
+        type: "open",
+        question: "Scenario: Database CPU suddenly spikes to 100% during normal business hours. Slow query log shows many queries that normally run in 10ms now taking 10+ seconds. No deployments happened recently. What's your investigation approach?",
+        answer: "1. Check pg_stat_statements for query plan changes (plan regression). 2. Analyze table statistics - outdated stats cause bad query plans. 3. Check for lock contention - long-running transactions blocking others. 4. Look for missing indexes due to recent data growth. 5. Verify connection pool isn't exhausted causing request queuing. 6. Check for vacuum/autovacuum blocking queries. 7. Analyze if statistics sampling needs increase for large tables. 8. Look for implicit type conversions causing index scans to become sequential scans.",
+        explanation: "Sudden performance degradation without code changes usually indicates plan regression or resource contention. PostgreSQL's query planner relies on statistics - outdated stats lead to suboptimal plans. Locks and vacuum operations can block queries. Data volume growth can invalidate previously optimal plans. pg_stat_statements reveals plan changes over time."
+    },
+    {
+        id: 121,
+        category: "Migration",
+        type: "open",
+        question: "Scenario: You need to add a JSONB column to a 500M row table and create a GIN index on it. The ALTER TABLE statement would lock the table for hours. How do you do this online with minimal impact?",
+        answer: "1. Add column as NULL without default (instant operation in PostgreSQL 11+). 2. Populate column in batches using background jobs with small commits. 3. Use CREATE INDEX CONCURRENTLY to build GIN index without locking. 4. Once index is ready, add any constraints with NOT VALID flag. 5. Run VALIDATE CONSTRAINT to verify existing data in background. 6. For default values, use trigger to populate new rows during migration. 7. Consider using pg_repack or logical replication for complex migrations. 8. Monitor progress and replication lag throughout the process.",
+        explanation: "PostgreSQL's ALTER TABLE acquires exclusive locks. Adding nullable columns is instant, but defaults require table rewrite. CREATE INDEX CONCURRENTLY builds indexes without blocking reads/writes but takes longer. The NOT VALID + VALIDATE pattern allows constraint checking without long locks. Batching updates prevents transaction log bloat and replication lag."
+    },
+    {
+        id: 122,
+        category: "System Design",
+        type: "open",
+        question: "Scenario: You're designing a recommendation engine that needs to serve personalized content to 100M users within 50ms. User behavior data is massive (TBs). How do you architect this?",
+        answer: "1. Use Redis Cluster for user preference caching with TTL-based eviction. 2. Pre-compute recommendations in batch (Spark/Flink) and store in key-value store. 3. Use approximate nearest neighbor (ANN) libraries (Faiss, Annoy) for similarity search. 4. Implement multi-level caching: edge CDN, application cache, database cache. 5. Use feature stores (Feast, Tecton) for ML feature consistency. 6. Separate cold-start users (popular content) from active users (personalized). 7. Use Redis Streams for real-time behavior ingestion. 8. Implement A/B testing infrastructure for recommendation algorithms.",
+        explanation: "Real-time personalization at scale requires pre-computation. You can't run ML inference per request at 50ms SLA. ANN libraries enable sub-millisecond similarity search across billions of items. Feature stores separate ML feature computation from serving. Cold-start strategies handle new users gracefully. Multi-level caching minimizes latency."
+    },
+    {
+        id: 123,
+        category: "Scaling",
+        type: "open",
+        question: "Scenario: Your read replica lag is consistently 30+ seconds, causing stale data issues. The replica has identical hardware to primary. Replication appears healthy. What's causing this and how do you fix it?",
+        answer: "1. Check for long-running queries on replica blocking replication (pg_stat_activity). 2. Look for heavy analytical queries on replica - consider dedicated analytics replica. 3. Check if hot_standby_feedback is enabled to prevent vacuum removing needed rows. 4. Analyze WAL generation rate - bulk operations create replication lag. 5. Check network latency between primary and replica. 6. Verify max_wal_size and checkpoint settings on primary. 7. Consider using logical replication for selective table replication. 8. Implement streaming replication monitoring with lag alerts.",
+        explanation: "Replication lag often comes from replica-side issues, not primary. Long-running queries on replicas can conflict with vacuum and block replication. Hot_standby_feedback prevents vacuum from removing rows that active queries need. Bulk operations generate massive WAL that takes time to replay. Separate OLAP workloads to prevent impacting OLTP replication."
+    },
+    {
+        id: 124,
+        category: "Data Consistency",
+        type: "open",
+        question: "Scenario: You have a microservices architecture. Service A updates data, publishes event, but crashes before transaction commits. Service B consumes the event and updates its data. How do you prevent this inconsistency?",
+        answer: "1. Implement Transactional Outbox pattern - write events to database table atomically with business data. 2. Use Change Data Capture (Debezium) to publish events from WAL. 3. Implement idempotency in consumers to handle duplicate events. 4. Use two-phase commit (Saga) for critical cross-service operations. 5. Implement at-least-once delivery semantics with consumer deduplication. 6. Use event sourcing for auditability and state reconstruction. 7. Implement compensating transactions for rollback scenarios. 8. Add distributed tracing to track transaction flow across services.",
+        explanation: "The dual-write problem (database + message broker) can't be solved atomically without patterns. Outbox pattern ensures events are persisted in the same transaction as data. CDC guarantees event delivery from committed transactions only. Idempotency handles the inevitable duplicate deliveries. Event sourcing provides ultimate auditability and replay capability."
+    },
+    {
+        id: 125,
+        category: "Architecture",
+        type: "open",
+        question: "Scenario: You're building a real-time collaborative document editing system like Google Docs. Multiple users edit simultaneously with sub-second synchronization. How do you handle concurrent edits and conflict resolution?",
+        answer: "1. Use Operational Transformation (OT) or CRDTs for conflict-free concurrent editing. 2. Implement WebSocket connections for real-time synchronization. 3. Use Redis Pub/Sub for real-time event broadcasting. 4. Store document history as operation log (event sourcing pattern). 5. Implement presence awareness with heartbeat mechanisms. 6. Use operational transform server to serialize and transform operations. 7. Implement cursor position synchronization separately from content. 8. Use database for persistent storage, in-memory for active sessions.",
+        explanation: "Collaborative editing requires specialized algorithms. OT transforms operations to maintain consistency after concurrent edits. CRDTs provide mathematically guaranteed convergence without coordination. Event sourcing enables undo/redo and audit history. Presence requires separate optimization from document content. The challenge is balancing consistency with real-time performance."
+    },
+    {
+        id: 126,
+        category: "Performance",
+        type: "open",
+        question: "Scenario: Your database has 20 indexes on a critical table. Write operations are slow (500ms+), but reads are fast. You're hesitant to drop indexes that might be used. How do you optimize this?",
+        answer: "1. Use pg_stat_user_indexes to identify unused indexes (idx_scan = 0). 2. Analyze index correlation and remove redundant indexes. 3. Check for duplicate indexes (same columns, different names). 4. Consider partial indexes for conditional queries instead of full indexes. 5. Evaluate covering indexes to replace multiple single-column indexes. 6. Use BRIN indexes instead of B-tree for large, naturally ordered data. 7. Implement index-only scans by adding INCLUDE columns. 8. Drop unused indexes in staging first, monitor query performance, then production.",
+        explanation: "Too many indexes kill write performance. Each INSERT/UPDATE must maintain all indexes. Unused indexes consume space and slow writes without benefit. Redundant indexes waste resources. Partial indexes are smaller and faster for filtered queries. BRIN indexes are tiny and effective for time-series data. Regular index maintenance is essential for write-heavy tables."
+    },
+    {
+        id: 127,
+        category: "Trade-off Analysis",
+        type: "open",
+        question: "Scenario: Your team debates between normalized and denormalized schema for a read-heavy analytics dashboard. Normalized saves storage, denormalized is faster. How do you decide?",
+        answer: "1. Measure actual query patterns - 80% of queries might hit 20% of data. 2. Consider storage is cheap, developer time and user experience are expensive. 3. Implement hybrid: normalized for writes, materialized views for reads. 4. Evaluate data change frequency - rarely changed data is safe to denormalize. 5. Use columnar storage for analytics where denormalization has less impact. 6. Consider incremental materialized views for near-real-time updates. 7. Benchmark both approaches with production-like data volumes. 8. Start normalized, denormalize specific queries when performance requires it.",
+        explanation: "Schema design is about trade-offs, not absolutes. Storage cost is negligible compared to query performance impact. Hybrid approaches provide flexibility. Materialized views offer the best of both worlds. Benchmark with realistic data volumes - small datasets hide performance problems. Start simple, optimize based on measured pain points."
+    },
+    {
+        id: 128,
+        category: "Troubleshooting",
+        type: "open",
+        question: "Scenario: Your application experiences intermittent 'connection timeout' errors. Database metrics look normal. The issue correlates with application deployments. What's your debugging strategy?",
+        answer: "1. Check if connection pool is properly sized for deployment scenarios. 2. Look for connection leaks during application shutdown/startup. 3. Verify graceful shutdown handling - connections should drain before restart. 4. Check if new application version has different query patterns. 5. Monitor connection establishment time during deployment windows. 6. Look for thundering herd problem - all instances reconnecting simultaneously. 7. Verify health check queries aren't overwhelming database during startup. 8. Implement connection pool warmup and staggered deployment strategies.",
+        explanation: "Deployment-related issues often stem from connection management. Graceful shutdown ensures connections close properly. Startup connection storms overwhelm databases. Connection pool sizing must account for rolling deployments where old and new versions run simultaneously. Health checks can accidentally become DoS attacks during mass restarts. Staggered deployments prevent thundering herds."
+    },
+    {
+        id: 129,
+        category: "Migration",
+        type: "open",
+        question: "Scenario: You need to shard an existing 2TB PostgreSQL database by user_id. The application has complex queries with joins across multiple tables. How do you approach this migration?",
+        answer: "1. Analyze query patterns to identify shard keys that minimize cross-shard queries. 2. Use Citus extension for PostgreSQL sharding with minimal code changes. 3. Implement application-level sharding logic with shard routing layer. 4. Migrate tables incrementally - start with largest, most isolated tables. 5. Use foreign data wrappers (FDW) for cross-shard queries during transition. 6. Implement shard rebalancing strategy for uneven data distribution. 7. Set up cross-shard transaction handling for atomic operations. 8. Plan for shard splitting when individual shards grow too large.",
+        explanation: "Sharding is complex and should be last resort after partitioning and read replicas. Citus provides transparent sharding for PostgreSQL. Shard key selection is critical - poor choice causes cross-shard joins that defeat the purpose. Incremental migration reduces risk. FDW allows gradual transition with some performance cost. Rebalancing handles hotspot shards."
+    },
+    {
+        id: 130,
+        category: "System Design",
+        type: "open",
+        question: "Scenario: You're building a healthcare application storing patient records. HIPAA compliance requires audit trails, encryption, and access controls. Data must be retained for 7 years. How do you design this?",
+        answer: "1. Implement row-level security (RLS) to enforce patient data access controls. 2. Use column-level encryption for PHI (Protected Health Information). 3. Create comprehensive audit log table tracking all data access. 4. Implement automatic data retention policies with secure deletion. 5. Use separate schemas or databases for different data sensitivity levels. 6. Enable database-level encryption at rest (TDE). 7. Implement session timeouts and automatic locking. 8. Set up automated backups with encryption and offsite storage. 9. Use dedicated read replicas for analytics to isolate reporting from transactional access.",
+        explanation: "Healthcare data requires defense in depth. RLS ensures users only see authorized records. Audit trails are mandatory for compliance - who accessed what when. Encryption at rest and in transit is essential. Data retention policies must be automated to prevent human error. Separate environments reduce blast radius of breaches. Regular security audits verify compliance."
+    },
+    {
+        id: 131,
+        category: "Performance",
+        type: "open",
+        question: "Scenario: Your batch ETL job loads 50M rows nightly and takes 8 hours. The job uses individual INSERT statements. Business wants near real-time data. How do you optimize the data pipeline?",
+        answer: "1. Replace individual INSERTs with COPY command for bulk loading. 2. Disable indexes during load, re-enable after (for non-unique indexes). 3. Use unlogged tables for intermediate staging, then insert to main table. 4. Implement parallel loading with multiple workers. 5. Use stream processing (Kafka Connect, Debezium) for CDC instead of batch. 6. Partition target table and load partitions in parallel. 7. Increase maintenance_work_mem for faster index creation. 8. Consider using external tables (foreign data wrappers) for direct querying without loading.",
+        explanation: "Bulk loading is orders of magnitude faster than individual inserts. COPY is optimized for large data movement. Disabling non-unique indexes during load eliminates per-row index maintenance. Unlogged tables skip WAL writing for staging data. Stream processing enables real-time vs batch. Parallel loading uses all available CPU. Partition-wise loading enables horizontal scaling."
+    },
+    {
+        id: 132,
+        category: "Scaling",
+        type: "open",
+        question: "Scenario: You have a global application with users in US, EU, and Asia. Database is in us-east-1 with 200ms latency for Asian users. How do you improve global performance while maintaining consistency?",
+        answer: "1. Deploy read replicas in each region for local read access. 2. Implement global load balancing with geo-DNS routing. 3. Use Aurora Global Database or CockroachDB for multi-region writes. 4. Implement data residency compliance for EU data (GDPR). 5. Use conflict-free replicated data types (CRDTs) for mergeable data. 6. Implement application-level routing - reads local, writes to primary. 7. Use caching (ElastiCache Global) for frequently accessed data. 8. Consider multi-master replication for region-local writes with conflict resolution.",
+        explanation: "Global applications face the latency-speed of light problem. Read replicas localize read traffic. Aurora Global Database provides 1-second cross-region replication. GDPR requires EU data stays in EU. CRDTs enable conflict-free local writes. Application routing logic must be region-aware. Caching is essential for global performance. Trade-offs exist between consistency and latency."
+    },
+    {
+        id: 133,
+        category: "Data Consistency",
+        type: "open",
+        question: "Scenario: You have a product inventory system. Two customers simultaneously try to buy the last item. How do you prevent overselling while maintaining performance?",
+        answer: "1. Use SELECT FOR UPDATE to lock inventory row during purchase. 2. Implement atomic decrement operations (UPDATE inventory SET count = count - 1 WHERE count > 0). 3. Use optimistic locking with version numbers for read-heavy scenarios. 4. Implement reservation pattern - reserve item for 10 minutes during checkout. 5. Use database constraints to prevent negative inventory. 6. Consider using Redis for high-speed inventory tracking with Lua scripts for atomicity. 7. Implement idempotency keys to prevent duplicate purchases on retries. 8. Use queue-based processing for inventory updates to serialize access.",
+        explanation: "Inventory management requires careful concurrency control. Pessimistic locking (FOR UPDATE) ensures accuracy but reduces throughput. Atomic operations are fastest for simple counters. Reservation pattern improves UX by holding items during checkout. Optimistic locking suits read-heavy, low-contention scenarios. Redis with Lua scripts provides microsecond-level inventory operations. Queue-based processing serializes naturally."
+    },
+    {
+        id: 134,
+        category: "Architecture",
+        type: "open",
+        question: "Scenario: You need to support both OLTP (fast transactions) and OLAP (complex analytics) on the same data. Queries conflict - analytics slow down transactions. How do you architect this?",
+        answer: "1. Implement CQRS (Command Query Responsibility Segregation) pattern. 2. Use read replicas dedicated to analytics workloads. 3. Set up ETL pipeline to data warehouse (Redshift, BigQuery, Snowflake). 4. Use change data capture (Debezium) for real-time data synchronization. 5. Implement materialized views for common analytics queries. 6. Use columnar storage for analytics, row storage for transactions. 7. Schedule analytics queries during low-traffic hours. 8. Consider HTAP databases (TiDB, SingleStore) that optimize for both workloads.",
+        explanation: "OLTP and OLAP have fundamentally different access patterns. CQRS separates read and write models completely. Read replicas isolate analytics from transactions. Data warehouses are optimized for analytical queries. CDC enables near real-time analytics without impacting OLTP. HTAP databases attempt to bridge the gap but have trade-offs. Scheduling separates workloads temporally."
+    },
+    {
+        id: 135,
+        category: "Optimization",
+        type: "open",
+        question: "Scenario: Your PostgreSQL vacuum process is constantly running and still can't keep up. Table bloat is 50% and growing. Queries are slowing down. What do you do?",
+        answer: "1. Increase autovacuum_max_workers for parallel vacuum operations. 2. Tune autovacuum_vacuum_scale_factor to trigger vacuum more aggressively. 3. Consider partitioning large tables to vacuum smaller chunks. 4. Use pg_repack or pg_squeeze to rebuild bloated tables online. 5. Increase maintenance_work_mem for faster vacuum operations. 6. Schedule manual VACUUM FULL during maintenance windows for critical tables. 7. Check for long-running transactions blocking vacuum progress. 8. Analyze update/delete patterns - consider HOT (Heap-Only Tuple) updates.",
+        explanation: "PostgreSQL's MVCC creates row versions on updates, requiring vacuum to reclaim space. Table bloat occurs when vacuum can't keep up. More workers and memory help vacuum process faster. Partitioning reduces vacuum scope. pg_repack rebuilds tables without downtime. Long transactions prevent vacuum from cleaning old row versions. HOT updates avoid index updates for non-indexed columns."
+    },
+    {
+        id: 136,
+        category: "Trade-off Analysis",
+        type: "open",
+        question: "Scenario: You must choose between adding a new feature that requires database schema changes vs. using a JSONB column for flexibility. The feature requirements may change frequently. How do you decide?",
+        answer: "1. Consider data query patterns - will you search/filter on this data? 2. Evaluate data integrity needs - referential constraints require structured schema. 3. Assess query performance requirements - JSONB is slower for complex queries. 4. Consider team expertise - JSONB requires different querying skills. 5. Use hybrid: core fields as columns, variable attributes as JSONB. 6. Evaluate migration complexity - schema changes are harder at scale. 7. Consider indexing needs - GIN indexes on JSONB vs standard B-tree. 8. Plan for future: JSONB for rapid iteration, migrate to schema when stabilized.",
+        explanation: "JSONB vs structured schema is about trade-offs. JSONB offers flexibility and rapid iteration. Structured schema provides type safety, constraints, and performance. Hybrid approaches capture benefits of both. Frequent schema changes favor JSONB temporarily. Complex queries and joins favor structured columns. JSONB is great for evolving requirements, but consider migration path to schema when requirements stabilize."
+    },
+    {
+        id: 137,
+        category: "Troubleshooting",
+        type: "open",
+        question: "Scenario: Your database disk I/O is at 100% and queries are timing out. iostat shows high await times. The database server is on cloud EBS volumes. How do you diagnose and fix this?",
+        answer: "1. Check if you've hit IOPS or throughput limits on EBS volumes. 2. Analyze query plans for sequential scans that should use indexes. 3. Look for checkpoint spikes - tune checkpoint_completion_target. 4. Consider provisioned IOPS (io1/io2) instead of gp2/gp3 for consistent performance. 5. Enable and analyze pg_stat_statements for I/O heavy queries. 6. Increase shared_buffers to reduce disk reads. 7. Check for write amplification from small, frequent updates. 8. Consider using NVMe SSD instance storage for WAL or temporary tables.",
+        explanation: "Cloud storage has limits that physical disks don't. EBS has IOPS and throughput limits that cause queueing. Burst credits on gp2 can deplete, causing sudden slowdowns. Sequential scans generate massive I/O. Checkpoint spikes occur when checkpoint_segments fill too quickly. pg_stat_statements identifies I/O-heavy queries. Properly sized buffer cache reduces physical reads. Instance store provides local NVMe performance."
+    },
+    {
+        id: 138,
+        category: "Migration",
+        type: "open",
+        question: "Scenario: You need to migrate a monolithic database to microservices, each with its own database. The monolith has 200 tables with complex foreign key relationships. How do you approach this?",
+        answer: "1. Identify bounded contexts and group related tables into services. 2. Start with least critical domains to learn and minimize risk. 3. Implement strangler fig pattern - gradually replace functionality. 4. Use data synchronization (CDC) to keep monolith and microservices in sync during transition. 5. Break foreign key constraints into application-level validation. 6. Implement sagas for cross-service transactions. 7. Create API layers that abstract data access during migration. 8. Plan for data ownership transfer - each service eventually owns its data exclusively.",
+        explanation: "Database decomposition is gradual, not big-bang. Bounded contexts define natural service boundaries. Strangler fig pattern allows incremental migration. CDC keeps data synchronized during transition. Foreign keys can't cross service boundaries - move to application validation. Sagas replace ACID transactions across services. APIs provide abstraction during transition. Data ownership clarity prevents coupling."
+    },
+    {
+        id: 139,
+        category: "System Design",
+        type: "open",
+        question: "Scenario: You're building a rate limiting system for an API gateway handling 100k requests/second per region. Rate limits are per-user, per-endpoint, and can change dynamically. How do you design this?",
+        answer: "1. Use Redis Cluster with sliding window rate limiting algorithm. 2. Implement token bucket algorithm for burst handling with smooth limiting. 3. Store rate limit configs in Redis for dynamic updates. 4. Use Redis Lua scripts for atomic rate limit checks. 5. Implement local in-memory caching for hot rate limit keys. 6. Use different Redis databases for different limit tiers (free, pro, enterprise). 7. Implement circuit breaker pattern for Redis failures (fail open). 8. Use Redis Streams for rate limit audit logging.",
+        explanation: "Rate limiting at scale requires distributed counters. Redis provides sub-millisecond counter operations. Sliding window is more accurate than fixed window but more complex. Token bucket allows bursts while maintaining average rate. Lua scripts ensure atomic check-and-increment. Local caching reduces Redis load for popular keys. Circuit breakers prevent Redis failure from cascading. Different tiers need isolation."
+    },
+    {
+        id: 140,
+        category: "Performance",
+        type: "open",
+        question: "Scenario: Your PostgreSQL database has tables with TEXT columns storing large JSON documents (1MB+). Queries filtering on JSON fields are slow. Table is 500GB. What's your optimization strategy?",
+        answer: "1. Create GIN indexes on frequently queried JSON paths. 2. Extract frequently queried fields into separate columns with indexes. 3. Use JSONB instead of TEXT for binary storage and indexing support. 4. Implement table partitioning by date or tenant to reduce scan scope. 5. Use TOAST storage settings to compress large values. 6. Consider external storage (S3) for large documents with metadata in PostgreSQL. 7. Use partial indexes for common query patterns. 8. Implement result pagination to avoid loading full documents.",
+        explanation: "Large JSON in PostgreSQL has trade-offs. GIN indexes enable fast JSON path queries but have overhead. Extracting hot fields to columns enables standard indexing. JSONB is more efficient than TEXT for structured data. TOAST compresses large values automatically. External storage separates document content from query metadata. Partial indexes are smaller and faster for filtered queries."
+    },
+    {
+        id: 141,
+        category: "Scaling",
+        type: "open",
+        question: "Scenario: Your write-heavy application needs to scale beyond single PostgreSQL instance limits. You've optimized indexes and queries. Read replicas exist but writes are the bottleneck. What are your options?",
+        answer: "1. Implement application-level sharding by tenant or geography. 2. Use Citus extension for transparent PostgreSQL sharding. 3. Move to cloud-native PostgreSQL (Aurora, AlloyDB) with better write scaling. 4. Separate write types - use message queues for async writes. 5. Use batch inserts to reduce transaction overhead. 6. Consider write-optimized databases (CockroachDB, YugabyteDB) for horizontal write scaling. 7. Implement CQRS to separate read and write models with different databases. 8. Use hot_standby_feedback and offloading reads to maximize primary for writes.",
+        explanation: "Single-node PostgreSQL has write throughput limits. Sharding distributes writes across nodes. Citus provides transparent sharding. Cloud-native solutions optimize storage layer. Async processing via queues smooths write spikes. NewSQL databases offer native horizontal write scaling. CQRS completely separates read and write concerns. Maximizing primary for writes requires aggressive read offloading."
+    },
+    {
+        id: 142,
+        category: "Data Consistency",
+        type: "open",
+        question: "Scenario: You have a job queue system. A worker picks up a job, processes it, but crashes before acknowledging completion. Another worker picks up the same job. How do you ensure exactly-once processing?",
+        answer: "1. Implement idempotent job processing - same job can run multiple times safely. 2. Use two-phase commit: reserve job, process, then confirm completion. 3. Implement visibility timeout - job is hidden from other workers during processing. 4. Use optimistic locking with version numbers on job status. 5. Implement deduplication based on job unique identifiers. 6. Store processed job IDs in idempotent-key store (Redis with TTL). 7. Use database transactions to ensure atomic status update. 8. Implement dead letter queues for jobs that fail repeatedly.",
+        explanation: "Exactly-once processing is theoretically impossible in distributed systems. Idempotency is the practical solution - make operations safe to repeat. Visibility timeouts prevent immediate duplicate processing. Deduplication stores track completed work. Two-phase commit patterns ensure state consistency. Dead letter queues handle poison messages. The goal is at-least-once delivery with idempotent processing."
+    },
+    {
+        id: 143,
+        category: "Architecture",
+        type: "open",
+        question: "Scenario: You're designing a system that needs to support both SQL queries for power users and full-text search for casual users. Data is relational but users need flexible querying. How do you architect this?",
+        answer: "1. Use PostgreSQL with powerful full-text search (tsvector, tsquery) for simpler needs. 2. Implement Elasticsearch for advanced search features (faceting, autocomplete, fuzzy matching). 3. Use Change Data Capture to sync PostgreSQL to Elasticsearch. 4. Route queries based on complexity - SQL for relational, ES for text search. 5. Implement GraphQL layer that federates between SQL and search results. 6. Use materialized views in PostgreSQL for common search combinations. 7. Consider hybrid search - PostgreSQL for structured filters, ES for text matching. 8. Implement caching for popular search queries.",
+        explanation: "Different query needs require different tools. PostgreSQL's full-text search handles basic needs without added complexity. Elasticsearch excels at relevance ranking and text analysis. CDC keeps search index synchronized. Query routing directs to appropriate engine. GraphQL can federate results from multiple sources. Hybrid approaches leverage strengths of each system."
+    },
+    {
+        id: 144,
+        category: "Optimization",
+        type: "open",
+        question: "Scenario: Your application has 1000+ database queries per page load due to N+1 problems in ORM. The codebase is large. How do you systematically fix this?",
+        answer: "1. Enable SQL logging and identify N+1 patterns using ORM profiling tools. 2. Implement eager loading (joins) for known relationship traversals. 3. Use DataLoader pattern for batching and deduplicating queries. 4. Implement SELECT DISTINCT to avoid duplicate parent records in joins. 5. Use database views to pre-join commonly accessed data. 6. Add query result caching for repeated lookups. 7. Implement field-level resolvers in GraphQL to batch field fetching. 8. Use lazy loading carefully - only when data is actually needed.",
+        explanation: "N+1 queries kill performance at scale. ORM profiling tools (Django Debug Toolbar, Rails Bullet) detect patterns. Eager loading fetches related data in one query. DataLoader batches multiple requests into single query. GraphQL field resolvers can be optimized to batch. Views provide pre-joined data. Caching eliminates repeated queries. Systematic detection and fixing is required for large codebases."
+    },
+    {
+        id: 145,
+        category: "Trade-off Analysis",
+        type: "open",
+        question: "Scenario: Your team must decide between using an ORM (Django ORM, Hibernate) vs. raw SQL. The ORM is slower for complex queries but faster to develop. How do you decide?",
+        answer: "1. Use ORM for 80% of standard CRUD operations - it accelerates development. 2. Use raw SQL for the 20% of complex queries where ORM generates inefficient SQL. 3. Implement repository pattern to abstract data access - swap implementation easily. 4. Use ORM's raw SQL escape hatches for specific optimized queries. 5. Consider query builders (Knex, jOOQ) as middle ground. 6. Benchmark critical paths - optimize only where needed. 7. Use database views for complex queries, map ORM to views. 8. Train team on ORM best practices to avoid common performance pitfalls.",
+        explanation: "ORM vs SQL is a false dichotomy. Both have valid use cases. ORM accelerates development and reduces boilerplate. Raw SQL provides full control for optimization. Repository pattern enables hybrid approaches. Most ORMs allow raw SQL for specific cases. Query builders offer type safety without full ORM overhead. Views bridge the gap - complex SQL with ORM convenience."
+    },
+    {
+        id: 146,
+        category: "Troubleshooting",
+        type: "open",
+        question: "Scenario: Your PostgreSQL database has dead tuples accumulating despite autovacuum running. The table keeps growing even though row count is stable. What's happening and how do you fix it?",
+        answer: "1. Check for long-running transactions preventing vacuum from removing dead tuples. 2. Look for orphaned prepared transactions (pg_prepared_xacts). 3. Check if replication slots are holding back vacuum (pg_replication_slots). 4. Verify autovacuum is actually processing the table (pg_stat_user_tables). 5. Check for lock conflicts preventing vacuum from running. 6. Look for hot_standby_feedback causing tuple retention on replicas. 7. Consider manual VACUUM (not FULL) during low traffic. 8. Tune vacuum_freeze_min_age if transaction ID wraparound is occurring.",
+        explanation: "Dead tuple accumulation usually means something blocks vacuum. Long transactions keep old row versions alive. Replication slots hold WAL and prevent cleanup. Prepared transactions can orphan resources. Autovacuum might not be triggering due to scale factor settings. Lock conflicts delay vacuum operations. Understanding MVCC and vacuum is essential for PostgreSQL administration."
+    },
+    {
+        id: 147,
+        category: "Migration",
+        type: "open",
+        question: "Scenario: You need to rename a column that's used by 50+ stored procedures, views, and application queries. How do you do this safely without breaking everything?",
+        answer: "1. Create new column with desired name, populate with data from old column. 2. Create triggers to keep both columns synchronized during transition. 3. Update views and stored procedures to use new column name. 4. Deploy application code changes to use new column (feature flags help). 5. Monitor for any missed references in error logs. 6. Once all references updated, drop triggers. 7. Remove old column after sufficient validation period. 8. Document the change for team knowledge.",
+        explanation: "Column renames in production require careful coordination. You can't simply ALTER TABLE RENAME - it breaks existing code. Dual-write pattern maintains compatibility during transition. Triggers ensure data consistency between old and new columns. Gradual rollout with feature flags reduces risk. Error monitoring catches missed references. The transition period depends on deployment frequency and cache invalidation."
+    },
+    {
+        id: 148,
+        category: "System Design",
+        type: "open",
+        question: "Scenario: You're building a time-series database for IoT sensor data - 1 million devices sending data every minute. Queries need to aggregate by time ranges and device groups. How do you design this?",
+        answer: "1. Use TimescaleDB extension on PostgreSQL for time-series optimization. 2. Implement automatic data retention with continuous aggregates. 3. Use compression for older data chunks. 4. Partition data by time (chunks) and optionally by device_id. 5. Implement downsampling - keep raw data for 7 days, aggregates for years. 6. Use inverted indexes for tag-based filtering. 7. Consider specialized time-series DB (InfluxDB, TimescaleDB) over general-purpose SQL. 8. Implement retention policies to move cold data to S3.",
+        explanation: "Time-series data has unique patterns - high write volume, time-based queries, data aging. TimescaleDB provides automatic partitioning (chunking) and compression. Continuous aggregates pre-compute rollups. Downsampling manages storage growth. Specialized databases optimize for these patterns. Retention policies automate data lifecycle. The key is matching data access patterns to storage strategies."
+    },
+    {
+        id: 149,
+        category: "Performance",
+        type: "open",
+        question: "Scenario: Your database backup window is 6 hours and growing. Business needs shorter maintenance windows. The database is 5TB. How do you optimize backups?",
+        answer: "1. Implement incremental backups (pg_basebackup with WAL archiving). 2. Use parallel backup tools (pgBackRest, Barman) with multiple workers. 3. Enable compression during backup to reduce I/O. 4. Use storage snapshots (EBS, ZFS) for near-instant backups. 5. Implement continuous archiving to S3 for point-in-time recovery. 6. Separate backup of large, less critical tables (logs, analytics). 7. Use differential backups between full backups. 8. Consider logical replication to standby for zero-downtime backups.",
+        explanation: "Large database backups require strategy changes. Incremental backups only capture changes. Parallel processing uses multiple cores. Storage snapshots are instant but need consistent snapshots. Continuous archiving provides ongoing protection without large backup windows. Separating critical and non-critical data optimizes backup priorities. The goal is balancing RTO/RPO with operational constraints."
+    },
+    {
+        id: 150,
+        category: "Scaling",
+        type: "open",
+        question: "Scenario: You have a database with 10,000 tables due to multi-tenant design (one schema per tenant). Connection pooling, vacuum, and DDL operations are becoming problematic. How do you handle this scale?",
+        answer: "1. Consolidate small tenants into shared schemas to reduce table count. 2. Use connection pooling with schema search_path for efficient multi-tenancy. 3. Implement automated partition management for tenant data growth. 4. Use pg_partman or similar for automated partition maintenance. 5. Consider row-level security (RLS) instead of schema separation for smaller tenants. 6. Implement schema templates for rapid tenant provisioning. 7. Use parallel vacuum for multiple tables simultaneously. 8. Consider database-per-tenant for enterprise customers with large data.",
+        explanation: "Too many tables strain PostgreSQL's catalog and resource management. Schema consolidation reduces overhead for small tenants. RLS provides isolation without schema multiplication. Connection pooling with search_path efficiently routes to correct schema. Automated maintenance is essential at scale. Hybrid approaches (schema for large, RLS for small) optimize resource usage. Enterprise tenants may warrant dedicated databases."
     }
 ];
 
@@ -1362,7 +1763,15 @@ const categoryEmojis = {
     'Cloud Databases': '☁️',
     'Data Warehousing': '🏭',
     'MongoDB': '🍃',
-    'PostgreSQL': '🐘'
+    'PostgreSQL': '🐘',
+    'System Design': '🏛️',
+    'Migration': '🚚',
+    'Scaling': '📈',
+    'Troubleshooting': '🔧',
+    'Data Consistency': '🔄',
+    'Architecture': '🏛️',
+    'Optimization': '⚡',
+    'Trade-off Analysis': '⚖️'
 };
 
 // DOM Elements
