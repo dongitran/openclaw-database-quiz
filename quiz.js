@@ -1479,35 +1479,52 @@ function renderQuestion() {
         questionTextEl.textContent = q.question;
     }
     
-    // Render options
+    // Render options based on question type
     if (optionsContainerEl) {
         optionsContainerEl.innerHTML = '';
-        const labels = ['A', 'B', 'C', 'D'];
         
-        q.options.forEach((option, index) => {
-            const optionEl = document.createElement('div');
-            optionEl.className = 'option';
-            
-            optionEl.innerHTML = `
-                <span class="option-letter">${labels[index]}</span>
-                <span class="option-text">${option}</span>
+        if (q.type === 'open') {
+            // Open-ended question: show hint or expected answer outline
+            const hintEl = document.createElement('div');
+            hintEl.className = 'open-question-hint';
+            hintEl.innerHTML = `
+                <div style="padding: 16px; background: rgba(255,255,255,0.1); border-radius: 12px; border: 1px dashed rgba(255,255,255,0.3); margin-bottom: 12px;">
+                    <p style="color: rgba(255,255,255,0.7); font-style: italic; margin: 0;">💡 This is a scenario-based question. Think about your approach, then click "Show Answer" to see the detailed solution.</p>
+                </div>
             `;
+            optionsContainerEl.appendChild(hintEl);
+        } else {
+            // Multiple choice question
+            const labels = ['A', 'B', 'C', 'D'];
             
-            optionEl.onclick = () => selectOption(index);
-            optionsContainerEl.appendChild(optionEl);
-        });
+            q.options.forEach((option, index) => {
+                const optionEl = document.createElement('div');
+                optionEl.className = 'option';
+                
+                optionEl.innerHTML = `
+                    <span class="option-letter">${labels[index]}</span>
+                    <span class="option-text">${option}</span>
+                `;
+                
+                optionEl.onclick = () => selectOption(index);
+                optionsContainerEl.appendChild(optionEl);
+            });
+        }
     }
 }
 
-// Select an option - immediate feedback
+// Select an option - immediate feedback (only for multiple choice)
 function selectOption(index) {
     const q = shuffledQuizData[currentQuestion];
+    
+    // Only works for multiple choice questions
+    if (q.type === 'open') return;
+    
     userAnswers[currentQuestion] = index;
     
     // Get all option elements
     const optionsContainerEl = document.getElementById('optionsContainer');
     const optionEls = optionsContainerEl ? optionsContainerEl.querySelectorAll('.option') : [];
-    const labels = ['A', 'B', 'C', 'D'];
     
     optionEls.forEach((el, i) => {
         el.classList.remove('selected');
@@ -1530,9 +1547,36 @@ function selectOption(index) {
 function showAnswer() {
     const q = shuffledQuizData[currentQuestion];
     const labels = ['A', 'B', 'C', 'D'];
+    const correctAnswerEl = document.getElementById('correctAnswer');
+    const explanationEl = document.getElementById('explanation');
     
-    correctAnswer.textContent = `Correct answer: ${labels[q.correct]}`;
-    explanation.innerHTML = q.explanation;
+    // Mark open-ended questions as "viewed" when showing answer
+    if (q.type === 'open' && userAnswers[currentQuestion] === null) {
+        userAnswers[currentQuestion] = -1; // -1 indicates "viewed but no selection"
+    }
+    
+    if (q.type === 'open') {
+        // Open-ended question: show the answer field
+        if (correctAnswerEl) {
+            correctAnswerEl.innerHTML = `
+                <div style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%); padding: 16px; border-radius: 12px; border-left: 4px solid #667eea; margin-bottom: 16px;">
+                    <strong style="color: #1e40af; display: block; margin-bottom: 8px;">📝 Sample Answer:</strong>
+                    <div style="color: #1e293b; line-height: 1.6;">${q.answer || 'See detailed explanation below'}</div>
+                </div>
+            `;
+        }
+        if (explanationEl) {
+            explanationEl.innerHTML = `<strong>Detailed Explanation:</strong><br><br>${q.explanation}`;
+        }
+    } else {
+        // Multiple choice question
+        if (correctAnswerEl) {
+            correctAnswerEl.textContent = `Correct answer: ${labels[q.correct]}`;
+        }
+        if (explanationEl) {
+            explanationEl.innerHTML = q.explanation;
+        }
+    }
     
     answerModal.classList.add('active');
 }
@@ -1577,14 +1621,30 @@ function updateNavigation() {
 function showCompletion() {
     // Calculate results
     let correctCount = 0;
+    let viewedCount = 0;
+    let mcqCount = 0;
+    let openCount = 0;
+    
     for (let i = 0; i < shuffledQuizData.length; i++) {
-        if (userAnswers[i] === shuffledQuizData[i].correct) {
-            correctCount++;
+        const q = shuffledQuizData[i];
+        if (q.type === 'open') {
+            openCount++;
+            // For open questions, count if user viewed the answer
+            if (userAnswers[i] !== null) {
+                viewedCount++;
+            }
+        } else {
+            mcqCount++;
+            // For MCQ, count correct answers
+            if (userAnswers[i] === q.correct) {
+                correctCount++;
+            }
         }
     }
     
-    // Update result display
-    document.getElementById('correctCount').textContent = correctCount;
+    // Update result display - show MCQ correct + Open viewed
+    const totalAnswered = correctCount + viewedCount;
+    document.getElementById('correctCount').textContent = totalAnswered;
     document.getElementById('totalCount').textContent = shuffledQuizData.length;
     
     // Update result message based on score
