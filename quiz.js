@@ -1306,6 +1306,24 @@ const quizData = [
 let currentQuestion = 0;
 let userAnswers = new Array(quizData.length).fill(null);
 
+// Category Emojis Mapping
+const categoryEmojis = {
+    'SQL': '📝',
+    'NoSQL': '📦',
+    'Transaction': '⚡',
+    'Indexing': '🎯',
+    'Normalization': '📊',
+    'Database Design': '🏗️',
+    'Advanced SQL': '🔮',
+    'Performance': '🚀',
+    'Security': '🔒',
+    'Backup & Recovery': '💾',
+    'Cloud Databases': '☁️',
+    'Data Warehousing': '🏭',
+    'MongoDB': '🍃',
+    'PostgreSQL': '🐘'
+};
+
 // DOM Elements
 const questionCounter = document.getElementById('questionCounter');
 const categoryBadge = document.getElementById('categoryBadge');
@@ -1316,6 +1334,8 @@ const nextBtn = document.getElementById('nextBtn');
 const showAnswerBtn = document.getElementById('showAnswerBtn');
 const quizComplete = document.getElementById('quizComplete');
 const quizCard = document.querySelector('.quiz-card');
+const progressDots = document.getElementById('progressDots');
+const progressCounter = document.getElementById('progressCounter');
 
 // Modal Elements
 const answerModal = document.getElementById('answerModal');
@@ -1324,6 +1344,26 @@ const explanation = document.getElementById('explanation');
 
 // Initialize
 function init() {
+    generateProgressDots();
+    renderQuestion();
+    updateNavigation();
+}
+
+// Generate progress dots
+function generateProgressDots() {
+    progressDots.innerHTML = '';
+    for (let i = 0; i < quizData.length; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'progress-dot';
+        dot.title = `Question ${i + 1}`;
+        dot.onclick = () => goToQuestion(i);
+        progressDots.appendChild(dot);
+    }
+}
+
+// Navigate to specific question
+function goToQuestion(index) {
+    currentQuestion = index;
     renderQuestion();
     updateNavigation();
 }
@@ -1334,8 +1374,18 @@ function renderQuestion() {
     
     // Update header
     questionCounter.textContent = `Question ${currentQuestion + 1}/100`;
-    categoryBadge.textContent = q.category;
+    
+    // Update category badge with emoji and color
+    const emoji = categoryEmojis[q.category] || '💡';
+    categoryBadge.textContent = `${emoji} ${q.category}`;
+    categoryBadge.className = 'category-badge';
+    const categoryClass = 'category-' + q.category.replace(/\s+/g, '\\ ').replace(/&/g, '\\&');
+    categoryBadge.classList.add(categoryClass);
+    
     questionText.textContent = q.question;
+    
+    // Update progress indicator
+    updateProgressIndicator();
     
     // Render options
     optionsContainer.innerHTML = '';
@@ -1379,6 +1429,27 @@ function selectOption(index) {
         el.onclick = null;
         el.style.cursor = 'default';
     });
+    
+    // Update progress dots
+    updateProgressIndicator();
+}
+
+// Update progress indicator dots
+function updateProgressIndicator() {
+    const dots = progressDots.querySelectorAll('.progress-dot');
+    dots.forEach((dot, index) => {
+        dot.classList.remove('active', 'answered');
+        if (index === currentQuestion) {
+            dot.classList.add('active');
+        }
+        if (userAnswers[index] !== null) {
+            dot.classList.add('answered');
+        }
+    });
+    
+    // Update progress counter
+    const answeredCount = userAnswers.filter(a => a !== null).length;
+    progressCounter.textContent = `${answeredCount}/${quizData.length}`;
 }
 
 // Show answer in modal
@@ -1436,6 +1507,7 @@ function restartQuiz() {
     quizCard.style.display = 'flex';
     quizCard.style.flexDirection = 'column';
     quizComplete.style.display = 'none';
+    generateProgressDots();
     renderQuestion();
     updateNavigation();
 }
