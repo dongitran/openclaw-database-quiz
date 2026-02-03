@@ -1520,6 +1520,32 @@ function updateNavigation() {
 }
 
 function showCompletion() {
+    // Calculate results
+    let correctCount = 0;
+    for (let i = 0; i < shuffledQuizData.length; i++) {
+        if (userAnswers[i] === shuffledQuizData[i].correct) {
+            correctCount++;
+        }
+    }
+    
+    // Update result display
+    document.getElementById('correctCount').textContent = correctCount;
+    document.getElementById('totalCount').textContent = shuffledQuizData.length;
+    
+    // Update result message based on score
+    const percentage = (correctCount / shuffledQuizData.length) * 100;
+    const messageEl = document.getElementById('resultMessage');
+    
+    if (percentage === 100) {
+        messageEl.textContent = '🌟 Perfect score! You\'re a database master!';
+    } else if (percentage >= 80) {
+        messageEl.textContent = '🎉 Excellent! You really know your databases!';
+    } else if (percentage >= 60) {
+        messageEl.textContent = '👍 Good job! Keep practicing to improve!';
+    } else {
+        messageEl.textContent = '💪 Keep learning! You\'ll get better with practice!';
+    }
+    
     quizCard.style.display = 'none';
     quizComplete.style.display = 'block';
 }
