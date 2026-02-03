@@ -102,7 +102,6 @@ main {
     display: flex;
     flex-direction: column;
     min-height: 0;
-    overflow: hidden;
 }
 
 .question-text {
@@ -113,14 +112,14 @@ main {
     flex-shrink: 0;
 }
 
-/* Options - Scrollable if needed */
+/* Options - Always visible */
 .options {
     display: flex;
     flex-direction: column;
     gap: 8px;
     flex: 1;
     overflow-y: auto;
-    min-height: 0;
+    min-height: 200px;
     padding-right: 4px;
 }
 
