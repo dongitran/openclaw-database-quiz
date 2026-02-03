@@ -176,21 +176,21 @@ main {
 }
 
 /* Category-specific badge colors */
-.category-badge.category-SQL { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-.category-badge.category-NoSQL { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
-.category-badge.category-Transaction { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-.category-badge.category-Indexing { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
-.category-badge.category-Normalization { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
-.category-badge.category-Database\ Design { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
-.category-badge.category-Advanced\ SQL { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); color: #333; }
-.category-badge.category-Performance { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); color: #333; }
-.category-badge.category-Security { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); color: #333; }
-.category-badge.category-Backup\ &\ Recovery { background: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%); color: #333; }
-.category-badge.category-Cloud\ Databases { background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%); color: #333; }
-.category-badge.category-Data\ Warehousing { background: linear-gradient(135deg, #c1dfc4 0%, #deecdd 100%); color: #333; }
-.category-badge.category-MongoDB { background: linear-gradient(135deg, #00ed64 0%, #00c853 100%); color: #000; }
-.category-badge.category-PostgreSQL { background: linear-gradient(135deg, #336791 0%, #5b8bc4 100%); }
-.category-badge.category-default { background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); }
+.category-badge[data-category="SQL"] { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+.category-badge[data-category="NoSQL"] { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
+.category-badge[data-category="Transaction"] { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+.category-badge[data-category="Indexing"] { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+.category-badge[data-category="Normalization"] { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+.category-badge[data-category="Database Design"] { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+.category-badge[data-category="Advanced SQL"] { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); color: #333; }
+.category-badge[data-category="Performance"] { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); color: #333; }
+.category-badge[data-category="Security"] { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); color: #333; }
+.category-badge[data-category="Backup & Recovery"] { background: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%); color: #333; }
+.category-badge[data-category="Cloud Databases"] { background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%); color: #333; }
+.category-badge[data-category="Data Warehousing"] { background: linear-gradient(135deg, #c1dfc4 0%, #deecdd 100%); color: #333; }
+.category-badge[data-category="MongoDB"] { background: linear-gradient(135deg, #00ed64 0%, #00c853 100%); color: #000; }
+.category-badge[data-category="PostgreSQL"] { background: linear-gradient(135deg, #336791 0%, #5b8bc4 100%); }
+.category-badge:not([data-category]) { background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); }
 
 /* Question Content */
 .question-content {
