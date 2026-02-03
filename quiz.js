@@ -1305,6 +1305,47 @@ const quizData = [
 // Quiz State
 let currentQuestion = 0;
 let userAnswers = new Array(quizData.length).fill(null);
+let shuffledQuizData = []; // Store shuffled questions
+
+// Fisher-Yates Shuffle Algorithm
+function fisherYatesShuffle(array) {
+    const arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+}
+
+// Shuffle questions and options
+function shuffleQuiz() {
+    // Shuffle the order of questions
+    const shuffledQuestions = fisherYatesShuffle(quizData);
+    
+    // For each question, shuffle the options and update correct index
+    shuffledQuizData = shuffledQuestions.map(q => {
+        // Create array of [option, originalIndex] pairs
+        const optionsWithIndex = q.options.map((opt, idx) => ({
+            text: opt,
+            originalIndex: idx
+        }));
+        
+        // Shuffle the options
+        const shuffledOptions = fisherYatesShuffle(optionsWithIndex);
+        
+        // Find the new position of the correct answer
+        const newCorrectIndex = shuffledOptions.findIndex(
+            opt => opt.originalIndex === q.correct
+        );
+        
+        // Return shuffled question with updated correct index
+        return {
+            ...q,
+            options: shuffledOptions.map(opt => opt.text),
+            correct: newCorrectIndex
+        };
+    });
+}
 
 // Category Emojis Mapping
 const categoryEmojis = {
@@ -1336,23 +1377,49 @@ const quizComplete = document.getElementById('quizComplete');
 const quizCard = document.querySelector('.quiz-card');
 const progressDots = document.getElementById('progressDots');
 const progressCounter = document.getElementById('progressCounter');
+const body = document.body;
 
 // Modal Elements
 const answerModal = document.getElementById('answerModal');
 const correctAnswer = document.getElementById('correctAnswer');
 const explanation = document.getElementById('explanation');
 
+// Update background gradient based on current question
+function updateBackgroundGradient() {
+    const totalQuestions = shuffledQuizData.length || 100;
+    const progress = currentQuestion / (totalQuestions - 1);
+
+    // Calculate hue: Start at 220 (blue), go through 280 (purple), 320 (pink), 160 (green), back to 200
+    // This creates a smooth transition: blue -> purple -> pink -> green -> teal
+    const startHue = 220;
+    const endHue = 380; // 220 + 160 = 380 (which wraps to 20)
+    const hue = startHue + (progress * (endHue - startHue));
+    const normalizedHue = hue % 360;
+
+    // Second color is offset by 40 degrees for a complementary look
+    const secondHue = (normalizedHue + 40) % 360;
+
+    // Use pastel/light colors with high lightness (85-92%) and low saturation (50-60%)
+    const color1 = `hsl(${normalizedHue}, 55%, 88%)`;
+    const color2 = `hsl(${secondHue}, 60%, 85%)`;
+
+    body.style.background = `linear-gradient(135deg, ${color1} 0%, ${color2} 100%)`;
+}
+
 // Initialize
 function init() {
+    shuffleQuiz();
+    userAnswers = new Array(shuffledQuizData.length).fill(null);
     generateProgressDots();
     renderQuestion();
     updateNavigation();
+    updateBackgroundGradient();
 }
 
 // Generate progress dots
 function generateProgressDots() {
     progressDots.innerHTML = '';
-    for (let i = 0; i < quizData.length; i++) {
+    for (let i = 0; i < shuffledQuizData.length; i++) {
         const dot = document.createElement('div');
         dot.className = 'progress-dot';
         dot.title = `Question ${i + 1}`;
@@ -1366,14 +1433,15 @@ function goToQuestion(index) {
     currentQuestion = index;
     renderQuestion();
     updateNavigation();
+    updateBackgroundGradient();
 }
 
 // Render current question
 function renderQuestion() {
-    const q = quizData[currentQuestion];
-    
+    const q = shuffledQuizData[currentQuestion];
+
     // Update header
-    questionCounter.textContent = `Question ${currentQuestion + 1}/100`;
+    questionCounter.textContent = `Question ${currentQuestion + 1}/${shuffledQuizData.length}`;
     
     // Update category badge with emoji and color
     const emoji = categoryEmojis[q.category] || '💡';
@@ -1407,7 +1475,7 @@ function renderQuestion() {
 
 // Select an option - immediate feedback
 function selectOption(index) {
-    const q = quizData[currentQuestion];
+    const q = shuffledQuizData[currentQuestion];
     userAnswers[currentQuestion] = index;
     
     // Get all option elements
@@ -1454,7 +1522,7 @@ function updateProgressIndicator() {
 
 // Show answer in modal
 function showAnswer() {
-    const q = quizData[currentQuestion];
+    const q = shuffledQuizData[currentQuestion];
     const labels = ['A', 'B', 'C', 'D'];
     
     correctAnswer.textContent = `Correct answer: ${labels[q.correct]}`;
@@ -1477,14 +1545,16 @@ function prevQuestion() {
         currentQuestion--;
         renderQuestion();
         updateNavigation();
+        updateBackgroundGradient();
     }
 }
 
 function nextQuestion() {
-    if (currentQuestion < quizData.length - 1) {
+    if (currentQuestion < shuffledQuizData.length - 1) {
         currentQuestion++;
         renderQuestion();
         updateNavigation();
+        updateBackgroundGradient();
     } else {
         // Show completion
         showCompletion();
@@ -1493,7 +1563,7 @@ function nextQuestion() {
 
 function updateNavigation() {
     prevBtn.disabled = currentQuestion === 0;
-    nextBtn.textContent = currentQuestion === quizData.length - 1 ? 'Finish →' : 'Next →';
+    nextBtn.textContent = currentQuestion === shuffledQuizData.length - 1 ? 'Finish →' : 'Next →';
 }
 
 function showCompletion() {
@@ -1502,14 +1572,16 @@ function showCompletion() {
 }
 
 function restartQuiz() {
+    shuffleQuiz();
     currentQuestion = 0;
-    userAnswers = new Array(quizData.length).fill(null);
+    userAnswers = new Array(shuffledQuizData.length).fill(null);
     quizCard.style.display = 'flex';
     quizCard.style.flexDirection = 'column';
     quizComplete.style.display = 'none';
     generateProgressDots();
     renderQuestion();
     updateNavigation();
+    updateBackgroundGradient();
 }
 
 // Keyboard navigation
