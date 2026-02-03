@@ -1333,7 +1333,7 @@ function renderQuestion() {
     const q = quizData[currentQuestion];
     
     // Update header
-    questionCounter.textContent = `Question ${currentQuestion + 1}/${quizData.length}`;
+    questionCounter.textContent = `Question ${currentQuestion + 1}/100`;
     categoryBadge.textContent = q.category;
     questionText.textContent = q.question;
     
