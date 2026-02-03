@@ -626,6 +626,8 @@ main {
 .quiz-complete .btn-primary {
     padding: 14px 32px;
     font-size: 1rem;
+    margin: 0 auto;
+    display: block;
 }
 
 /* Result Stats */
