@@ -1868,6 +1868,61 @@ const quizData = [
         question: "Scenario: Your application needs to query JSONB data with deeply nested paths like data->'user'->'profile'->'preferences'->>'theme'. The queries are slow even with GIN index. You've identified that 90% of queries look up the same 5 nested paths. Design an optimization strategy that doesn't require schema migration (no adding columns) but improves query performance by 10x.",
         answer: "1. Create expression indexes on the most common paths: CREATE INDEX idx_theme ON users USING BTREE((data->'user'->'profile'->'preferences'->>'theme')). 2. Use immutable function wrapper for complex paths to enable index usage. 3. Implement generated/stored columns (if PG 12+) for the top 5 paths with indexes on those columns. 4. Create partial indexes for high-cardinality values: WHERE data->'user'->'profile'->'preferences'->>'theme' IS NOT NULL. 5. Cache frequently accessed JSON subtrees in application layer (Redis). 6. Use jsonb_path_ops GIN index variant if only using @> containment queries.",
         explanation: "Expression indexes on specific JSON paths provide B-tree performance for equality/range queries on extracted values. This is faster than GIN for specific path lookups because: 1) B-tree is more compact than GIN, 2) Direct index on computed value eliminates extraction overhead, 3) Partial indexes further reduce size for sparse data. jsonb_path_ops creates smaller, faster GIN indexes but only supports @> operator. The key is matching index strategy to query patterns - one-size-fits-all GIN may not be optimal for specific access patterns."
+    },
+    {
+        id: 157,
+        category: "PostgreSQL",
+        question: "What is the PostgreSQL Visibility Map used for?",
+        options: [
+            "Tracking which users can see which tables",
+            "Storing metadata about which table pages contain only visible tuples to all transactions",
+            "Monitoring query performance visibility",
+            "Managing row-level security permissions"
+        ],
+        correct: 1,
+        explanation: "The <strong>Visibility Map</strong> tracks which table pages contain only tuples visible to <em>all transactions</em>. It enables two key optimizations: 1) <strong>Index-only scans</strong> can skip heap lookups for all-visible pages, 2) <strong>VACUUM</strong> can skip pages that don't need freezing. Each page has 2 bits: all-visible (no dead tuples) and all-frozen (no XID wraparound risk)."
+    },
+    {
+        id: 158,
+        category: "PostgreSQL",
+        question: "How does the Visibility Map improve Index-Only Scan performance?",
+        options: [
+            "It caches index entries in memory",
+            "It allows the query to return data from the index without accessing the heap (table) for all-visible pages",
+            "It compresses the index data",
+            "It creates a separate smaller index"
+        ],
+        correct: 1,
+        explanation: "<strong>Index-Only Scans</strong> can avoid heap lookups when all needed data is in the index AND the page is marked <em>all-visible</em> in the visibility map. Without the visibility map, PostgreSQL must always check the heap to ensure tuple visibility (MVCC), even if all columns are in the index. The visibility map bit proves all tuples on that page are visible to everyone."
+    },
+    {
+        id: 159,
+        category: "PostgreSQL",
+        question: "What is the difference between 'all-visible' and 'all-frozen' bits in the Visibility Map?",
+        options: [
+            "They are the same thing with different names",
+            "All-visible means no dead tuples; all-frozen means tuples are frozen (won't need XID wraparound vacuum)",
+            "All-visible is for SELECT, all-frozen is for INSERT",
+            "All-frozen pages cannot be modified"
+        ],
+        correct: 1,
+        explanation: "<strong>All-visible</strong>: Page contains no dead tuples - all tuples are visible to all transactions. Enables index-only scans.<br><strong>All-frozen</strong>: All tuples on the page are 'frozen' (XID replaced with FrozenTransactionId). These pages don't need vacuum for XID wraparound protection.<br>Both bits allow VACUUM to skip such pages, significantly reducing vacuum I/O."
+    },
+    {
+        id: 160,
+        category: "PostgreSQL",
+        type: "open",
+        question: "Scenario: Your PostgreSQL database has a table with 100M rows and a covering index. You notice that queries using the covering index are still doing heap lookups (not true index-only scans). The visibility map seems to be the issue. Explain why this happens and how to fix it.",
+        answer: "The visibility map bits are likely not set (all-visible = false) because: 1) Recent writes/deletes created dead tuples, 2) Autovacuum hasn't cleaned the pages yet, 3) Long-running transactions prevent vacuum from marking pages all-visible. To fix: 1) Run VACUUM ANALYZE on the table to update visibility map, 2) Check for long-running transactions (pg_stat_activity) and terminate if safe, 3) Increase autovacuum frequency for this table, 4) Consider VACUUM FREEZE if XID wraparound is near. After vacuum, verify with pg_visibility extension.",
+        explanation: "Index-only scans require the visibility map to confirm all tuples on a page are visible. If recent DML occurred or vacuum is behind, the all-visible bit won't be set, forcing heap lookups. The visibility map is only updated by vacuum. Long transactions block vacuum progress. Regular vacuum maintenance is essential for index-only scan performance."
+    },
+    {
+        id: 161,
+        category: "PostgreSQL",
+        type: "open",
+        question: "Scenario: Your 500GB PostgreSQL database has vacuum taking 12+ hours and I/O is saturated during the process. You notice vacuum is scanning pages that haven't changed in months. How can the visibility map help optimize this, and what vacuum parameters should you tune?",
+        answer: "1. Visibility map allows VACUUM to skip pages already marked all-frozen or all-visible - tune vacuum_freeze_min_age and vacuum_freeze_table_age to freeze older pages sooner. 2. Increase maintenance_work_mem (1-2GB) to vacuum more pages per scan. 3. Enable parallel vacuum: max_parallel_maintenance_workers = 4. 4. Consider vacuuming specific tables separately during low-traffic windows. 5. Use visibility map to identify which tables actually need vacuum. 6. Tune autovacuum_vacuum_scale_factor lower for large tables (0.001 instead of 0.2). 7. Check visibility map coverage: SELECT * FROM pg_visibility_map_summary('table_name').",
+        explanation: "Without visibility map optimization, VACUUM scans every page even if clean. The all-frozen bit marks pages that never need XID wraparound vacuum. Tuning freeze parameters makes pages 'all-frozen' faster, allowing future vacuums to skip them. Parallel vacuum uses multiple workers. Lower scale factor triggers vacuum more frequently on large tables, preventing massive buildup of dead tuples."
     }
 ];
 
