@@ -1804,6 +1804,70 @@ const quizData = [
         question: "Scenario: You have a database with 10,000 tables due to multi-tenant design (one schema per tenant). Connection pooling, vacuum, and DDL operations are becoming problematic. How do you handle this scale?",
         answer: "1. Consolidate small tenants into shared schemas to reduce table count. 2. Use connection pooling with schema search_path for efficient multi-tenancy. 3. Implement automated partition management for tenant data growth. 4. Use pg_partman or similar for automated partition maintenance. 5. Consider row-level security (RLS) instead of schema separation for smaller tenants. 6. Implement schema templates for rapid tenant provisioning. 7. Use parallel vacuum for multiple tables simultaneously. 8. Consider database-per-tenant for enterprise customers with large data.",
         explanation: "Too many tables strain PostgreSQL's catalog and resource management. Schema consolidation reduces overhead for small tenants. RLS provides isolation without schema multiplication. Connection pooling with search_path efficiently routes to correct schema. Automated maintenance is essential at scale. Hybrid approaches (schema for large, RLS for small) optimize resource usage. Enterprise tenants may warrant dedicated databases."
+    },
+    // Senior Level PostgreSQL JSON Operators Questions
+    {
+        id: 151,
+        category: "PostgreSQL",
+        question: "When querying JSONB with multiple nested conditions, which combination of operators provides the best performance with proper indexing?",
+        options: [
+            "Using ->> for all field extractions then comparing",
+            "Using @> with GIN index for containment checks",
+            "Using ? operator repeatedly for each key check",
+            "Converting JSONB to TEXT and using LIKE"
+        ],
+        correct: 1,
+        explanation: "The <strong>@></strong> operator with a <strong>GIN index</strong> provides the best performance for containment checks. GIN indexes support @>, ?, ?&, and ?| operators efficiently. Using ->> extracts text which cannot use JSONB indexes effectively, and LIKE on JSON text is the slowest approach."
+    },
+    {
+        id: 152,
+        category: "PostgreSQL",
+        question: "You need to find all records where JSONB 'settings' field contains either 'dark_mode': true OR 'notifications': 'enabled'. Which query is most efficient?",
+        options: [
+            "settings ->> 'dark_mode' = 'true' OR settings ->> 'notifications' = 'enabled'",
+            "settings @> '{\"dark_mode\": true}' OR settings @> '{\"notifications\": \"enabled\"}'",
+            "settings ? 'dark_mode' OR settings ? 'notifications'",
+            "settings #> '{dark_mode}' = 'true' OR settings #> '{notifications}' = 'enabled'"
+        ],
+        correct: 1,
+        explanation: "<strong>Option B</strong> using <strong>@></strong> is most efficient because: 1) It uses GIN index for fast containment checks, 2) It checks values not just key existence, 3) JSONB indexes work with @> operator. Option A converts to text (slow), Option C only checks key existence not values, Option D uses path extraction without index support."
+    },
+    {
+        id: 153,
+        category: "PostgreSQL",
+        question: "Which index type should you create on a JSONB column to optimize queries using @>, ?, ?&, and ?| operators?",
+        options: [
+            "B-tree index",
+            "Hash index",
+            "GIN index with jsonb_ops or jsonb_path_ops",
+            "GiST index"
+        ],
+        correct: 2,
+        explanation: "<strong>GIN (Generalized Inverted Index)</strong> is designed for JSONB containment and existence operators. <strong>jsonb_ops</strong> supports all operators (@>, ?, ?&, ?|). <strong>jsonb_path_ops</strong> is smaller and faster for @> but doesn't support ? operators. B-tree and Hash indexes don't support JSONB operations."
+    },
+    {
+        id: 154,
+        category: "PostgreSQL",
+        type: "open",
+        question: "Scenario: Your e-commerce platform stores product attributes as JSONB (size, color, specs). The table has 10M rows. Queries filtering by multiple JSON attributes are taking 5+ seconds. Users filter by combinations like color='red' AND size='XL' AND price range. The queries use settings->>'color' = 'red' AND settings->>'size' = 'XL'. How do you optimize this for sub-100ms response time?",
+        answer: "1. Create GIN index on the JSONB column: CREATE INDEX idx_products_settings ON products USING GIN(settings). 2. Rewrite queries to use @> operator: WHERE settings @> '{\"color\": \"red\", \"size\": \"XL\"}'. 3. For range queries (price), extract frequently queried fields to separate columns with B-tree indexes. 4. Use partial GIN indexes for common filter combinations. 5. Consider computed/generated columns for top 5 most-queried attributes. 6. Implement materialized views for expensive aggregations.",
+        explanation: "The key insight is that ->> extracts text which cannot use JSONB GIN indexes effectively. The @> containment operator can leverage GIN indexes for lightning-fast queries. For mixed queries (JSON + range), hybrid approaches work best: JSONB for categorical filters, regular columns for ranges. Generated columns provide the best of both worlds - flexible storage with indexed performance."
+    },
+    {
+        id: 155,
+        category: "PostgreSQL",
+        type: "open",
+        question: "Scenario: You're designing a schema for a multi-tenant SaaS where each tenant has different custom fields. Option A: Use JSONB 'custom_fields' column with GIN index. Option B: Use EAV (Entity-Attribute-Value) pattern with separate tables. Option C: Create separate columns dynamically per tenant. Compare these approaches for 1000 tenants with 1M rows each, focusing on query performance, storage, and maintainability.",
+        answer: "JSONB Approach (RECOMMENDED): Pros - Flexible schema per tenant, single table, GIN indexes handle complex queries, ACID compliant. Cons - GIN indexes are large, JSON syntax is verbose, no foreign key constraints on JSON fields. EAV Approach: Pros - Pure relational, type safety. Cons - Complex queries requiring multiple joins, poor performance at scale, difficult aggregation. Dynamic Columns: Pros - Native SQL performance. Cons - Schema explosion, DDL overhead, ORM incompatibility, migration nightmare. At 1000 tenants x 1M rows, JSONB with GIN index provides best balance.",
+        explanation: "This is a classic schema flexibility vs performance trade-off. JSONB wins for dynamic schemas because: 1) Single table with GIN index outperforms EAV joins by 100x+, 2) PostgreSQL's JSONB is mature with excellent indexing support, 3) Storage is efficient with TOAST compression. EAV pattern creates query complexity (N joins for N attributes). Dynamic columns don't scale operationally - ALTER TABLE locks and ORM caching issues."
+    },
+    {
+        id: 156,
+        category: "PostgreSQL",
+        type: "open",
+        question: "Scenario: Your application needs to query JSONB data with deeply nested paths like data->'user'->'profile'->'preferences'->>'theme'. The queries are slow even with GIN index. You've identified that 90% of queries look up the same 5 nested paths. Design an optimization strategy that doesn't require schema migration (no adding columns) but improves query performance by 10x.",
+        answer: "1. Create expression indexes on the most common paths: CREATE INDEX idx_theme ON users USING BTREE((data->'user'->'profile'->'preferences'->>'theme')). 2. Use immutable function wrapper for complex paths to enable index usage. 3. Implement generated/stored columns (if PG 12+) for the top 5 paths with indexes on those columns. 4. Create partial indexes for high-cardinality values: WHERE data->'user'->'profile'->'preferences'->>'theme' IS NOT NULL. 5. Cache frequently accessed JSON subtrees in application layer (Redis). 6. Use jsonb_path_ops GIN index variant if only using @> containment queries.",
+        explanation: "Expression indexes on specific JSON paths provide B-tree performance for equality/range queries on extracted values. This is faster than GIN for specific path lookups because: 1) B-tree is more compact than GIN, 2) Direct index on computed value eliminates extraction overhead, 3) Partial indexes further reduce size for sparse data. jsonb_path_ops creates smaller, faster GIN indexes but only supports @> operator. The key is matching index strategy to query patterns - one-size-fits-all GIN may not be optimal for specific access patterns."
     }
 ];
 
