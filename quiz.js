@@ -1300,6 +1300,110 @@ const quizData = [
         correct: 1,
         explanation: "<strong>PostgreSQL Full-Text Search</strong> is <em>built-in</em>! It handles stemming (run/runs/running), stop words, ranking results by relevance, and special indexes (GIN) for speed. No Elasticsearch needed for many use cases!"
     },
+    {
+        id: 101,
+        category: "PostgreSQL",
+        question: "What does the `->` operator do in PostgreSQL JSONB?",
+        options: [
+            "Converts JSON to text",
+            "Extracts a JSON object field as JSON",
+            "Checks if a key exists in JSON",
+            "Deletes a key from JSON"
+        ],
+        correct: 1,
+        explanation: "The <strong>-></strong> operator extracts a JSON object field <em>as JSON</em>. Example: <code>'{\"a\":{\"b\":1}}'::jsonb->'a'</code> returns <code>{\"b\":1}</code> (as JSON). Use ->> to get the result as text."
+    },
+    {
+        id: 102,
+        category: "PostgreSQL",
+        question: "What does the `#>` operator do in PostgreSQL JSONB?",
+        options: [
+            "Checks if JSON contains a value",
+            "Extracts JSON sub-object at the specified path",
+            "Converts JSON to a hash value",
+            "Merges two JSON objects"
+        ],
+        correct: 1,
+        explanation: "The <strong>#></strong> operator extracts JSON sub-object at the specified path. Example: <code>'{\"a\":{\"b\":{\"c\":1}}}'::jsonb#>'{a,b}'</code> returns <code>{\"c\":1}</code>. Path is specified as an array of text."
+    },
+    {
+        id: 103,
+        category: "PostgreSQL",
+        question: "What does the `?` operator do in PostgreSQL JSONB?",
+        options: [
+            "Returns the number of keys in JSON",
+            "Checks if a string exists as a top-level key",
+            "Validates if JSON is well-formed",
+            "Checks if JSON is null"
+        ],
+        correct: 1,
+        explanation: "The <strong>?</strong> operator checks if a string exists as a top-level JSON key. Example: <code>'{\"a\":1,\"b\":2}'::jsonb ? 'a'</code> returns <strong>true</strong>. Only checks top-level keys, not nested."
+    },
+    {
+        id: 104,
+        category: "PostgreSQL",
+        question: "What does the `?&` operator do in PostgreSQL JSONB?",
+        options: [
+            "Returns all keys in the JSON object",
+            "Checks if all strings in the array exist as top-level keys",
+            "Merges multiple JSON objects",
+            "Checks if any key matches the pattern"
+        ],
+        correct: 1,
+        explanation: "The <strong>?&</strong> operator checks if <em>all</em> strings in the array exist as top-level JSON keys. Example: <code>'{\"a\":1,\"b\":2,\"c\":3}'::jsonb ?& array['a','b']</code> returns <strong>true</strong>. All keys must exist."
+    },
+    {
+        id: 105,
+        category: "PostgreSQL",
+        question: "What does the `?|` operator do in PostgreSQL JSONB?",
+        options: [
+            "Checks if exactly one key exists",
+            "Checks if any of the strings in the array exist as top-level keys",
+            "Returns the first matching key value",
+            "Validates JSON against a schema"
+        ],
+        correct: 1,
+        explanation: "The <strong>?|</strong> operator checks if <em>any</em> of the strings in the array exist as top-level JSON keys. Example: <code>'{\"a\":1,\"b\":2}'::jsonb ?| array['a','x']</code> returns <strong>true</strong> because 'a' exists."
+    },
+    {
+        id: 106,
+        category: "PostgreSQL",
+        question: "What does the `@>` operator do in PostgreSQL JSONB?",
+        options: [
+            "Checks if the left JSON value contains the right JSON value",
+            "Appends two JSON arrays together",
+            "Checks if JSON is valid",
+            "Extracts a subset of JSON fields"
+        ],
+        correct: 0,
+        explanation: "The <strong>@></strong> operator checks if the left JSON value <em>contains</em> the right JSON value. Example: <code>'{\"a\":1,\"b\":2}'::jsonb @> '{\"a\":1}'::jsonb</code> returns <strong>true</strong>. Useful for filtering JSON documents."
+    },
+    {
+        id: 107,
+        category: "PostgreSQL",
+        question: "What is the difference between `->` and `->>` operators in PostgreSQL JSONB?",
+        options: [
+            "No difference, they are aliases",
+            "-> returns JSON, ->> returns text",
+            "-> is for objects, ->> is for arrays",
+            "-> is faster than ->>"
+        ],
+        correct: 1,
+        explanation: "<strong>-></strong> returns the result <em>as JSON</em> (you can chain it: <code>data->'a'->'b'</code>).<br><strong>->></strong> returns the result <em>as text</em> (cannot chain, final operation). Use ->> when you need the final value as a string/number."
+    },
+    {
+        id: 108,
+        category: "PostgreSQL",
+        question: "Which operator is used for pattern matching with regular expressions in PostgreSQL?",
+        options: [
+            "LIKE",
+            "~ (tilde)",
+            "MATCH",
+            "REGEXP"
+        ],
+        correct: 1,
+        explanation: "The <strong>~</strong> (tilde) operator performs case-sensitive regex matching. <strong>~*</strong> does case-insensitive matching. Example: <code>'Hello' ~ '^[A-Z]'</code> returns true. For JSONB, combine with ->> first: <code>data->>'name' ~ '^A'</code>."
+    },
     // 50 Scenario-Based Questions for Senior Fullstack Developers
     {
         id: 101,
